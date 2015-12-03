@@ -1,4 +1,6 @@
 #include <boost/shared_ptr.hpp>
+#include <vector>
+#include <string>
 
 class CSCSResultIter;
 class CSCSComparer;
