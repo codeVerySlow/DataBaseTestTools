@@ -47,7 +47,7 @@ const STConfig* CSCSConfigHelper::Read()
 	CSCSConfigHelper::config->DesConnect.strUser=m["dest_scsdb"]["user"];
 	CSCSConfigHelper::config->DesConnect.strDataBase=m["dest_scsdb"]["db"];
 
-	CSCSConfigHelper::config->Model=m["mode"]["mode"];	
+	CSCSConfigHelper::config->Model=ConvertStringToEnum<STModel>(m["mode"]["mode"]);	
 	return CSCSConfigHelper::config;
 }
 
@@ -147,3 +147,19 @@ bool CSCSConfigHelper::IsCategory(const std::string &line,std::string *category)
 	return false;
 }
 
+template <typename EnumType>
+EnumType CSCSConfigHelper::ConvertStringToEnum( const char * pStr)
+{
+     EnumType fooEnum = static_cast <EnumType>(-1);
+     int count = sizeof (SEnumName<EnumType>::List) /
+         sizeof (SEnumName<EnumType>::List[0]);
+     for ( int i = 0; i < count; ++i)
+     {	         
+     	if ( strcmp (rawData, SEnumName<EnumType>::List[i]))
+         {
+             fooEnum = static_cast <ProgLang>(i);
+             break ;
+         }
+     }
+     return fooEnum;
+ }
