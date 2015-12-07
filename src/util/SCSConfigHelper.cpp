@@ -1,4 +1,7 @@
 #include "SCSConfigHelper.h"
+#include <fstream>
+#include <iostream>
+
 #define COMMENT_CHAR '#'
 STConfig* CSCSConfigHelper::config=new STConfig;
 
@@ -11,6 +14,40 @@ const CSCSConfigHelper*  CSCSConfigHelper::GetInstance()
 
 const STConfig* CSCSConfigHelper::Read()
 {
+	std::map<std::string,std::map<std::string,std::string>> m;
+	ifstream infile("/config");
+	if(!infile)
+	{
+		std::cout<<"file open error"<<std::endl;
+		return CSCSConfigHelper::config;
+	}
+	std::string line, category, key, value;
+	while(getline(infile,line))
+	{
+		if(IsCategory(line,&category))
+		{
+			continue;
+		}
+
+		if(AnalyseLine(line,&key,&value))
+		{
+			m[category][key]=value;
+		}
+	}
+
+	infile.close();
+
+	CSCSConfigHelper::config->SrcConnect.strPwd=m["src_scsdb"]["pwd"];
+	CSCSConfigHelper::config->SrcConnect.strIP=m["src_scsdb"]["hosts"];
+	CSCSConfigHelper::config->SrcConnect.strUser=m["src_scsdb"]["user"];
+	CSCSConfigHelper::config->SrcConnect.strDataBase=m["src_scsdb"]["db"];
+	
+	CSCSConfigHelper::config->DesConnect.strPwd=m["dest_scsdb"]["pwd"];
+	CSCSConfigHelper::config->DesConnect.strIP=m["dest_scsdb"]["hosts"];
+	CSCSConfigHelper::config->DesConnect.strUser=m["dest_scsdb"]["user"];
+	CSCSConfigHelper::config->DesConnect.strDataBase=m["dest_scsdb"]["db"];
+
+	CSCSConfigHelper::config->Model=m["mode"]["mode"];	
 	return CSCSConfigHelper::config;
 }
 
@@ -76,7 +113,7 @@ bool CSCSConfigHelper::AnalyseLine(const std::string &line,std::string *key,std:
 		}
 		end=pos-1;		
 	}
-	
+
 	std::string strconfig=line.substr(0,end+1);
 	
 	if((pos=strconfig.find('='))==-1)
@@ -84,6 +121,29 @@ bool CSCSConfigHelper::AnalyseLine(const std::string &line,std::string *key,std:
 		return false;
 	}
 
-	key=strconfig.substr(0,pos+1);
-	value=strconfig.substr(pos,end-pos+1);
+	*key=strconfig.substr(0,pos+1);
+	*value=strconfig.substr(pos,end-pos+1);
+
+	return true;
 }
+
+bool CSCSConfigHelper::IsCategory(const std::string &line,std::string *category)
+{
+	if(line.empty())
+	{
+		return false;
+	}
+
+	int pos=0,end=line.size()-1;
+	if((pos=line.find('['))!=-1)
+	{
+		if((end=line.find(']'))!=-1)
+		{
+			*category=line.substr(pos,end-pos+1);
+			return true;
+		}
+	}
+
+	return false;
+}
+

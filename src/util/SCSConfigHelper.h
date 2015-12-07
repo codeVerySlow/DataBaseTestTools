@@ -2,6 +2,19 @@
 #include <string>
 #include <map>
 
+enum STModel
+{
+	scsdb=0,
+	mysql=1
+};
+
+enum STCharset
+{
+	utf8=0,
+	gbk=1,
+	latin1=2
+};
+
 struct STConnect
 {
 	std::string strIP;
@@ -14,6 +27,12 @@ struct STConfig
 {
 	STConnect SrcConnect;
 	STConnect DesConnect;
+	STConnect SrcMysqlConnect;
+	STModel Model;
+	STCharset Charset;
+	int Cycle;
+	bool Loginfo;
+	bool Slavestatus;
 };
 
 class CSCSConfigHelper
@@ -31,5 +50,7 @@ class CSCSConfigHelper
 		void Trim(std::string *str);
 		bool IsCommentChar(const char c);
 		bool AnalyseLine(const std::string &line,std::string *key,std::string *value);
+		bool IsCategory(const std::string &line,std::string *category);
+
 };
 
