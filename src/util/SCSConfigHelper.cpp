@@ -1,6 +1,7 @@
 #include "SCSConfigHelper.h"
 #include <fstream>
 #include <iostream>
+#include <string.h>
 
 #define COMMENT_CHAR '#'
 STConfig* CSCSConfigHelper::config=new STConfig;
@@ -14,13 +15,14 @@ const CSCSConfigHelper*  CSCSConfigHelper::GetInstance()
 
 const STConfig* CSCSConfigHelper::Read()
 {
-	std::map<std::string,std::map<std::string,std::string>> m;
-	ifstream infile("/config");
+	std::map<std::string,std::map<std::string,std::string> > m;
+	std::ifstream infile("/config");
 	if(!infile)
 	{
 		std::cout<<"file open error"<<std::endl;
 		return CSCSConfigHelper::config;
 	}
+
 	std::string line, category, key, value;
 	while(getline(infile,line))
 	{
@@ -41,13 +43,14 @@ const STConfig* CSCSConfigHelper::Read()
 	CSCSConfigHelper::config->SrcConnect.strIP=m["src_scsdb"]["hosts"];
 	CSCSConfigHelper::config->SrcConnect.strUser=m["src_scsdb"]["user"];
 	CSCSConfigHelper::config->SrcConnect.strDataBase=m["src_scsdb"]["db"];
-	
+
 	CSCSConfigHelper::config->DesConnect.strPwd=m["dest_scsdb"]["pwd"];
 	CSCSConfigHelper::config->DesConnect.strIP=m["dest_scsdb"]["hosts"];
 	CSCSConfigHelper::config->DesConnect.strUser=m["dest_scsdb"]["user"];
 	CSCSConfigHelper::config->DesConnect.strDataBase=m["dest_scsdb"]["db"];
 
-	CSCSConfigHelper::config->Model=ConvertStringToEnum<STModel>(m["mode"]["mode"]);	
+	CSCSConfigHelper::config->Model=ConvertStringToEnum<STModel>(m["mode"]["mode"].c_str());	
+	CSCSConfigHelper::config->Charset=ConvertStringToEnum<STCharset>(m["charset"]["charset"].c_str());
 	return CSCSConfigHelper::config;
 }
 
@@ -61,7 +64,7 @@ void CSCSConfigHelper::Trim(std::string *str)
 	if(str->empty())
 	  return;
 
-	ulong  i,begin,end;
+	long  i,begin,end;
 	for(i=0;i<str->size();i++)
 	{
 		if(!IsSpace((*str)[i]))
@@ -115,7 +118,7 @@ bool CSCSConfigHelper::AnalyseLine(const std::string &line,std::string *key,std:
 	}
 
 	std::string strconfig=line.substr(0,end+1);
-	
+
 	if((pos=strconfig.find('='))==-1)
 	{
 		return false;
@@ -148,18 +151,18 @@ bool CSCSConfigHelper::IsCategory(const std::string &line,std::string *category)
 }
 
 template <typename EnumType>
-EnumType CSCSConfigHelper::ConvertStringToEnum( const char * pStr)
+EnumType CSCSConfigHelper::ConvertStringToEnum(const char *pStr)
 {
-     EnumType fooEnum = static_cast <EnumType>(-1);
-     int count = sizeof (SEnumName<EnumType>::List) /
-         sizeof (SEnumName<EnumType>::List[0]);
-     for ( int i = 0; i < count; ++i)
-     {	         
-     	if ( strcmp (rawData, SEnumName<EnumType>::List[i]))
-         {
-             fooEnum = static_cast <ProgLang>(i);
-             break ;
-         }
-     }
-     return fooEnum;
- }
+	EnumType fooEnum = static_cast <EnumType>(-1);
+	int count = SEnumName<EnumType>::Count;
+
+	for ( int i = 0; i < count; ++i)
+	{	         
+		if (strcmp(pStr,SEnumName<EnumType>::List[i]))
+		{
+			fooEnum = static_cast <EnumType>(i);
+			break ;
+		}
+	}
+	return fooEnum;
+}

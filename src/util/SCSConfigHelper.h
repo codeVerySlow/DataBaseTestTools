@@ -1,30 +1,42 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include "SCSEnumHelper.h"
+#include <vector>
 
-<template EnumType>
+template <class EnumType>
 struct SEnumName
 {
-     static const char * List[];
+	static const int Count;
+	static const char *List[];
 };
 
 enum STModel
 {
-	scsdb=0,
-	mysql=1
+	SCSDB,
+	MYSQL
 };
-const char* SEnumName<STModel>::List[]=
+
+template<>
+const int SEnumName<STModel>::Count=2;
+
+template<>
+const char*  SEnumName<STModel>::List[]=
 {
 	"scsdb",
-	"mysql"	
+	"mysql"
 };
+
 enum STCharset
 {
-	utf8=0,
-	gbk=1,
-	latin1=2
+	UTF8,
+	GBK,
+	LATIN1
 };
+
+template<>
+const int SEnumName<STCharset>::Count=3;
+
+template<>
 const char* SEnumName<STCharset>::List[]=
 {
 	"utf8",
@@ -68,6 +80,6 @@ class CSCSConfigHelper
 		bool AnalyseLine(const std::string &line,std::string *key,std::string *value);
 		bool IsCategory(const std::string &line,std::string *category);
 		template <typename EnumType>
-		EnumType ConvertStringToEnum( const char * pStr);
+			EnumType ConvertStringToEnum( const char *pStr);
 };
 
