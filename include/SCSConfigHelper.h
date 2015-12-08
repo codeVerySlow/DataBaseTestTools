@@ -46,6 +46,7 @@ const char* SEnumName<STCharset>::List[]=
 struct STConnect
 {
 	std::string strIP;
+	std::string strPort;
 	std::string strUser;
 	std::string strPwd;
 	std::string strDataBase;

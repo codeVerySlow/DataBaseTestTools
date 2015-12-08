@@ -14,6 +14,9 @@ class CSCSPreparedSQLSet
 public:
 	int nCurrentIndex;
 	int nTotal;
+	bool checkSequence;
+	int nExecTimes;
+	bool checkDataNodes;
 	STSQLPair GetNext();
 private:
 	std::vector<std::string> vecSQLSource;

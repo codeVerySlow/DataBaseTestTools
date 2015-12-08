@@ -4,6 +4,7 @@
 #include <string.h>
 
 #define COMMENT_CHAR '#'
+
 STConfig* CSCSConfigHelper::config=new STConfig;
 
 const CSCSConfigHelper* CSCSConfigHelper::instance=new CSCSConfigHelper;
@@ -43,11 +44,13 @@ const STConfig* CSCSConfigHelper::Read()
 	CSCSConfigHelper::config->SrcConnect.strIP=m["src_scsdb"]["hosts"];
 	CSCSConfigHelper::config->SrcConnect.strUser=m["src_scsdb"]["user"];
 	CSCSConfigHelper::config->SrcConnect.strDataBase=m["src_scsdb"]["db"];
+	CSCSConfigHelper::config->SrcConnect.strPort=m["src_scsdb"]["port"];
 
 	CSCSConfigHelper::config->DesConnect.strPwd=m["dest_scsdb"]["pwd"];
 	CSCSConfigHelper::config->DesConnect.strIP=m["dest_scsdb"]["hosts"];
 	CSCSConfigHelper::config->DesConnect.strUser=m["dest_scsdb"]["user"];
 	CSCSConfigHelper::config->DesConnect.strDataBase=m["dest_scsdb"]["db"];
+	CSCSConfigHelper::config->DesConnect.strPort=m["dest_scsdb"]["port"];
 
 	CSCSConfigHelper::config->Model=ConvertStringToEnum<STModel>(m["mode"]["mode"].c_str());	
 	CSCSConfigHelper::config->Charset=ConvertStringToEnum<STCharset>(m["charset"]["charset"].c_str());
