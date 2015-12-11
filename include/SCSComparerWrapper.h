@@ -5,15 +5,6 @@
 class CSCSResultIter;
 class CSCSComparer;
 
-struct STReport
-{
-	int nTotal;
-	int nPass;
-	bool isSuccess;
-	std::vector<std::string> vecFailData;
-	std::string strMessage;
-};
-
 class CSCSComparerWrapper
 {
 public:
