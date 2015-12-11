@@ -52,8 +52,8 @@ const STConfig* CSCSConfigHelper::Read()
 	CSCSConfigHelper::config->DesConnect.strDataBase=m["dest_scsdb"]["db"];
 	CSCSConfigHelper::config->DesConnect.strPort=m["dest_scsdb"]["port"];
 
-	CSCSConfigHelper::config->Model=ConvertStringToEnum<STModel>(m["mode"]["mode"].c_str());	
-	CSCSConfigHelper::config->Charset=ConvertStringToEnum<STCharset>(m["charset"]["charset"].c_str());
+	CSCSConfigHelper::config->Model=ConvertStringToEnum<EMModel>(m["mode"]["mode"].c_str());	
+	CSCSConfigHelper::config->Charset=ConvertStringToEnum<EMCharset>(m["charset"]["charset"].c_str());
 	return CSCSConfigHelper::config;
 }
 

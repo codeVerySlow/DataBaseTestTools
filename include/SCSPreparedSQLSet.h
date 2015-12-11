@@ -1,12 +1,11 @@
 #include <string>
 #include <vector>
+#include <boost/shared_ptr.hpp>
 
 struct STSQLPair
 {
 	std::string strSQLSource;
 	std::string strSQLDestination;
-	int nCycle;
-	bool isSequence;
 };
 
 class CSCSPreparedSQLSet

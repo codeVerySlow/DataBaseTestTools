@@ -3,7 +3,6 @@
  
 #include <string>
 #include <boost/shared_ptr.hpp> 
-#include "include/SCSPreparedSQLSet.h"
 
 class CSCSPreparedSQLSet;
 
@@ -11,7 +10,7 @@ class CSCSReader{
 public:
 	CSCSReader() {};
 	virtual ~CSCSReader() {};
-	virtual CSCSPreparedSQLSet ReadNextTestCase()=0;
+	virtual boost::shared_ptr<CSCSPreparedSQLSet> ReadNextTestCase()=0;
 	static boost::shared_ptr<CSCSReader> Create();
 };
 

@@ -26,3 +26,16 @@
 *.exe
 *.out
 *.app
+
+#VS Project File
+*.sln
+*.vcproj
+*.vcproj.*
+*.ncb
+*.suo
+
+#self
+.gitignore
+
+#tags
+*.tags*

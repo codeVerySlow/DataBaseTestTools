@@ -1,3 +1,5 @@
+#ifndef _INCLUDE_SCSREADERWRAPPER_H_
+#define _INCLUDE_SCSREADERWRAPPER_H_
 #include <string>
 #include <boost/shared_ptr.hpp>
 
@@ -8,8 +10,8 @@ class CSCSReaderWrapper{
 public:
 	CSCSReaderWrapper();
 	~CSCSReaderWrapper();
-	STPreparedSQLSet ReadTestSQL();
-	bool ValidateTestSQL();
+	boost::shared_ptr<STPreparedSQLSet> ReadNextTestCase();
 private:
 	boost::shared_ptr<CSCSReader> reader;
 }
+#endif

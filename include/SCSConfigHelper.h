@@ -1,3 +1,5 @@
+#ifndef _INCLUDE_SCSCONFIGHELPER_H_
+#define _INCLUDE_SCSCONFIGHELPER_H_
 #include <iostream>
 #include <string>
 #include <map>
@@ -10,23 +12,30 @@ struct SEnumName
 	static const char *List[];
 };
 
-enum STModel
+enum EMDataBaseType
+{
+	SCSDB,
+	MYSQL,
+	ORACL
+};
+
+enum EMModel
 {
 	SCSDB,
 	MYSQL
 };
 
 template<>
-const int SEnumName<STModel>::Count=2;
+const int SEnumName<EMModel>::Count=2;
 
 template<>
-const char*  SEnumName<STModel>::List[]=
+const char*  SEnumName<EMModel>::List[]=
 {
 	"scsdb",
 	"mysql"
 };
 
-enum STCharset
+enum EMCharset
 {
 	UTF8,
 	GBK,
@@ -34,10 +43,10 @@ enum STCharset
 };
 
 template<>
-const int SEnumName<STCharset>::Count=3;
+const int SEnumName<EMCharset>::Count=3;
 
 template<>
-const char* SEnumName<STCharset>::List[]=
+const char* SEnumName<EMCharset>::List[]=
 {
 	"utf8",
 	"gbk",
@@ -57,8 +66,8 @@ struct STConfig
 	STConnect SrcConnect;
 	STConnect DesConnect;
 	STConnect SrcMysqlConnect;
-	STModel Model;
-	STCharset Charset;
+	EMModel Model;
+	EMCharset Charset;
 	int Cycle;
 	bool Loginfo;
 	bool Slavestatus;
@@ -84,3 +93,4 @@ class CSCSConfigHelper
 			EnumType ConvertStringToEnum( const char *pStr);
 };
 
+#endif

@@ -4,13 +4,6 @@
 class CSCSExecuter;
 class CSCSResultIter;
 
-enum EMDataBaseType
-{
-	SCSDB,
-	MYSQL,
-	ORACL
-};
-
 class CSCSExecuterWrapper
 {
 public:	
@@ -19,9 +12,9 @@ public:
 	bool OpenDataSource(const std::string &user,
 						const std::strin &password,
 						const std::string &ip,
-						const std::string &database,
-						const EMDataBaseType &databasetype);
-	CSCSResultIter ExecuteSQL(const std::string &sql);	
+						const std::string &port,
+						const std::string &database);
+	boost::shared_ptr<CSCSResultIter> ExecuteSQL(const std::string &sql);	
 	void CloseDatasource();	
 private:
 	boost::shared_ptr<CSCSExecuter> excuter;
