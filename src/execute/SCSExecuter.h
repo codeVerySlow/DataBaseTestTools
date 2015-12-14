@@ -18,6 +18,6 @@ public:
 	static boost::shared_ptr<CSCSExecuter> Create();
 private:
 	virtual std::vector<std::string> GetNextRow()=0;
-}
+};
 
 #endif

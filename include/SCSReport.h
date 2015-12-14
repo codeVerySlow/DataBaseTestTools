@@ -1,7 +1,10 @@
+#ifndef _INCLUDE_SCSREPORT_H_
+#define _INCLUDE_SCSREPORT_H_
+
 #include <vector>
 #include <string>
 
-class STReport
+class CSCSReport
 {
 	public:
 		int nTotal;
@@ -12,3 +15,4 @@ class STReport
 };
 
 
+#endif

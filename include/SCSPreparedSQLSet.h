@@ -1,3 +1,6 @@
+#ifndef _INCLUDE_SCSPREPAREDSQLSET_H_
+#define _INCLUDE_SCSPREPAREDSQLSET_H_ value
+
 #include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
@@ -22,3 +25,4 @@ private:
 	std::vector<std::string> vecSQLDestination;
 };
 
+#endif

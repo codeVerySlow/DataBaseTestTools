@@ -4,7 +4,7 @@
 #include <boost/shared_ptr.hpp>
 
 class CSCSReader;
-class STPreparedSQLSet;
+class CSCSPreparedSQLSet;
 
 class CSCSReaderWrapper{
 public:
@@ -13,5 +13,6 @@ public:
 	boost::shared_ptr<STPreparedSQLSet> ReadNextTestCase();
 private:
 	boost::shared_ptr<CSCSReader> reader;
-}
+};
+
 #endif
