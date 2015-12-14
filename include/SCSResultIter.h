@@ -10,8 +10,8 @@ class CSCSResultIter{
 public:
 	CSCSResultIter(Executer *executer);
 	~CSCSResultIter();
-	const std::vector<std::string>& GetNext() const;
-	const std::vector<std::string>& GetCurrent() const;
+	std::vector<std::string> GetNext();
+	std::vector<std::string> GetCurrent();
 private:
 	std::vector<std::string> m_vecCurrentData;
 };
