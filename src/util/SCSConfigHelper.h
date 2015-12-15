@@ -71,14 +71,15 @@ struct STConfig
 	int Cycle;
 	bool Loginfo;
 	bool Slavestatus;
+	std::string ResultPath;
 };
 
 class CSCSConfigHelper
 {
 	public:
-		const CSCSConfigHelper* GetInstance();
+		static const CSCSConfigHelper* GetInstance();
 		~CSCSConfigHelper();
-		const STConfig* Read();
+		const STConfig* Read() const;
 	private:
 		CSCSConfigHelper();
 		static STConfig* config;
