@@ -12,6 +12,7 @@ public:
 	~CSCSResultIter();
 	std::vector<std::string> GetNext();
 	std::vector<std::string> GetCurrent();
+	std::string GetCaseId();
 private:
 	std::vector<std::string> m_vecCurrentData;
 };

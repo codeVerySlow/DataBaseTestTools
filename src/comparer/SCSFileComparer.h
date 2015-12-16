@@ -11,7 +11,10 @@ class CSCSFileComparer:public CSCSComparer
 		bool CompareSequence(CSCSResultIter *iter1,CSCSResultIter *iter2);
 		boost::shared_ptr<const CSCSReport> GetReport() const;
 	private:
-		unsigned int GetCRC32(const char *str);
-		void CRC32Init();
-		unsigned int Crc32Table[256];
+		void SortResultIter(CSCSResultIter *iter,const std::string &fileName);
+		void WriteCRCToCache(CSCSResultIter *iter,const std::string &fileName,unsigned int *max,unsigned int *min,unsigned int *total);
+		std::vector<unsigned int> ReadCRCFromFile(const std::string &fileName,unsigned int min,unsigned int max);
+		void WriteSortCRCToFile(std::vector<unsigned int> vecCRC,const std::string &fileName);
+		
+		void WriteToFile(const std::string &data,const std::string &fileName);
 };
