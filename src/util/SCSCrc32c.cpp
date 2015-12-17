@@ -9,9 +9,7 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <sstream>
 
-namespace leveldb {
 namespace crc32c {
 
 static const uint32_t table0_[256] = {
@@ -336,21 +334,6 @@ while (p != e) {
 return l ^ 0xffffffffu;
 }
 
-template <typename T>
-std::string NumberToString ( T Number )
-{
-	std::ostringstream ss;
-	ss << Number;
-	return ss.str();
-}
 
-template <typename T>
-T StringToNumber ( const std::string &Text )
-{
-	std::istringstream ss(Text);
-	T result;
-	return ss >> result ? result : 0;
-}
 
 }  // namespace crc32c
-}  // namespace leveldb

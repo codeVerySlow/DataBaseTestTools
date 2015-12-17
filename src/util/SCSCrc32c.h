@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string>
+#include <sstream>
 
 namespace crc32c {
 
@@ -40,11 +41,20 @@ inline uint32_t Unmask(uint32_t masked_crc) {
 }
 
 template <typename T>
-extern std::string NumberToString ( T Number );
+std::string NumberToString ( T Number )
+{
+	std::ostringstream ss;
+	ss << Number;
+	return ss.str();
+}
 
 template <typename T>
-extern  T StringToNumber ( const std::string &Text );
-
+T StringToNumber ( const std::string &Text )
+{
+	std::istringstream ss(Text);
+	T result;
+	return ss >> result ? result : 0;
+}
 }  // namespace crc32c
 
 #endif  // STORAGE_LEVELDB_UTIL_CRC32C_H_
