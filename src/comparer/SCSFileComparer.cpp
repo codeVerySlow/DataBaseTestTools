@@ -6,13 +6,6 @@
 #include "util/SCSSortCache.h"
 #include "util/SCSCrc32c.h"
 
-
-template <typename T>
-extern std::string NumberToString ( T Number );
-
-template <typename T>
-extern  T StringToNumber ( const std::string &Text );
-
 CSCSFileComparer::CSCSFileComparer()
 {
 }
@@ -60,27 +53,11 @@ void CSCSFileComparer::SortResultIter(CSCSResultIter *iter,const std::string &fi
 
 	unsigned int max,min,total,k=10240000;
 	WriteCRCToCache(iter,"unsort_crc",&max,&min,&total);
-
-	int i,group=(total+k-1)/k,split=(max-min+1)/group;
-			
-	std::ofstream file(fileName.c_str());
-
-	for(i=0;i<group;i++)
-	{
-		std::vector<unsigned int> crcs=ReadCRCFromFile("unsort_crc",min+split*i,min+split*(i+1)-1);
-		std::sort (crcs.begin(), crcs.end()); 
-		WriteSortCRCToFile(crcs,file);
-	}
-	file.close();
 }
 
-void CSCSFileComparer::WriteCRCToCache(CSCSResultIter *iter,const std::string &fileName,unsigned int *max,unsigned int *min,unsigned int *total)
+void CSCSFileComparer::WriteCRCToCache(CSCSResultIter *iter,CSCSSortCache &cache)
 {
-	CSCSSortCache cache(fileName);
-	cache.Delete();
-	*max=0;
-	*min=0xFFFFFFFF;
-	*total=0;
+
 
 	while(1)
 	{
@@ -103,47 +80,11 @@ void CSCSFileComparer::WriteCRCToCache(CSCSResultIter *iter,const std::string &f
 		WriteToFile(combinStr,iter->GetCaseId());
 
 		unsigned int crc=crc32c::Value(combinStr.c_str(),combinStr.size());
-		if(crc>*max)
-		{
-			*max=crc;
-		}
-		if(crc<*min)
-		{
-			*min=crc;
-		}
-		(*total)++;
-		cache<<crc32c::NumberToString(crc);
+
+		cache<<crc;
 	}
 }
 
-std::vector<unsigned int> CSCSFileComparer::ReadCRCFromFile(const std::string &fileName,unsigned int min,unsigned int max)
-{
-	std::string line;
-	std::vector<unsigned int> result;
-	
-	CSCSSortCache cache(fileName);
-
-	while(cache.Read(&line))
-	{
-		unsigned int uiline=crc32c::StringToNumber<unsigned int>(line);
-		if(uiline>=min&&uiline<=max)
-		{
-			result.push_back(uiline);
-		}
-	}
-	return result;
-}
-
-void CSCSFileComparer::WriteSortCRCToFile(std::vector<unsigned int> vecCRC,std::ofstream &file)
-{
-	std::vector<unsigned int>::iterator iter=vecCRC.begin();
-
-	while(iter!=vecCRC.end())
-	{
-		file<<*iter++<<"\n";
-	}
-	file.close();
-}
 
 void CSCSFileComparer::WriteToFile(const std::string &data,const std::string &fileName)
 {
