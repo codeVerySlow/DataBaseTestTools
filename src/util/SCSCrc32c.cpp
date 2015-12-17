@@ -5,10 +5,11 @@
 // A portable implementation of crc32c, optimized to handle
 // four bytes at a time.
 
-#include "util/crc32c.h"
+#include "SCSCrc32c.h"
 
 #include <stdint.h>
-#include "util/coding.h"
+#include <string.h>
+#include <sstream>
 
 namespace leveldb {
 namespace crc32c {
@@ -277,6 +278,13 @@ static const uint32_t table3_[256] = {
   0x31035088, 0xec46fa30, 0x8e647309, 0x5321d9b1,
   0x4a21617b, 0x9764cbc3, 0xf54642fa, 0x2803e842
 };
+inline uint32_t DecodeFixed32(const char* ptr) {
+		// Load the raw bytes
+		uint32_t result;
+		memcpy(&result, ptr, sizeof(result));  // gcc optimizes this to a plain load
+		return result;
+}
+
 
 // Used to fetch a naturally-aligned 32-bit word in little endian byte-order
 static inline uint32_t LE_LOAD32(const uint8_t *p) {
@@ -284,48 +292,64 @@ static inline uint32_t LE_LOAD32(const uint8_t *p) {
 }
 
 uint32_t Extend(uint32_t crc, const char* buf, size_t size) {
-  const uint8_t *p = reinterpret_cast<const uint8_t *>(buf);
-  const uint8_t *e = p + size;
-  uint32_t l = crc ^ 0xffffffffu;
+	const uint8_t *p = reinterpret_cast<const uint8_t *>(buf);
+	const uint8_t *e = p + size;
+	uint32_t l = crc ^ 0xffffffffu;
 
 #define STEP1 do {                              \
-    int c = (l & 0xff) ^ *p++;                  \
-    l = table0_[c] ^ (l >> 8);                  \
+	int c = (l & 0xff) ^ *p++;                  \
+	l = table0_[c] ^ (l >> 8);                  \
 } while (0)
 #define STEP4 do {                              \
-    uint32_t c = l ^ LE_LOAD32(p);              \
-    p += 4;                                     \
-    l = table3_[c & 0xff] ^                     \
-        table2_[(c >> 8) & 0xff] ^              \
-        table1_[(c >> 16) & 0xff] ^             \
-        table0_[c >> 24];                       \
+	uint32_t c = l ^ LE_LOAD32(p);              \
+	p += 4;                                     \
+	l = table3_[c & 0xff] ^                     \
+	table2_[(c >> 8) & 0xff] ^              \
+	table1_[(c >> 16) & 0xff] ^             \
+	table0_[c >> 24];                       \
 } while (0)
 
-  // Point x at first 4-byte aligned byte in string.  This might be
-  // just past the end of the string.
-  const uintptr_t pval = reinterpret_cast<uintptr_t>(p);
-  const uint8_t* x = reinterpret_cast<const uint8_t*>(((pval + 3) >> 2) << 2);
-  if (x <= e) {
-    // Process bytes until finished or p is 4-byte aligned
-    while (p != x) {
-      STEP1;
-    }
-  }
-  // Process bytes 16 at a time
-  while ((e-p) >= 16) {
-    STEP4; STEP4; STEP4; STEP4;
-  }
-  // Process bytes 4 at a time
-  while ((e-p) >= 4) {
-    STEP4;
-  }
-  // Process the last few bytes
-  while (p != e) {
-    STEP1;
-  }
+	// Point x at first 4-byte aligned byte in string.  This might be
+	// just past the end of the string.
+	const uintptr_t pval = reinterpret_cast<uintptr_t>(p);
+	const uint8_t* x = reinterpret_cast<const uint8_t*>(((pval + 3) >> 2) << 2);
+	if (x <= e) {
+		// Process bytes until finished or p is 4-byte aligned
+		while (p != x) {
+			STEP1;
+		}
+	}
+// Process bytes 16 at a time
+while ((e-p) >= 16) {
+	STEP4; STEP4; STEP4; STEP4;
+}
+// Process bytes 4 at a time
+while ((e-p) >= 4) {
+	STEP4;
+}
+// Process the last few bytes
+while (p != e) {
+	STEP1;
+}
 #undef STEP4
 #undef STEP1
-  return l ^ 0xffffffffu;
+return l ^ 0xffffffffu;
+}
+
+template <typename T>
+std::string NumberToString ( T Number )
+{
+	std::ostringstream ss;
+	ss << Number;
+	return ss.str();
+}
+
+template <typename T>
+T StringToNumber ( const std::string &Text )
+{
+	std::istringstream ss(Text);
+	T result;
+	return ss >> result ? result : 0;
 }
 
 }  // namespace crc32c

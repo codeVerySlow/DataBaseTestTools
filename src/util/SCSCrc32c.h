@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <string>
 
 namespace crc32c {
 
@@ -37,6 +38,12 @@ inline uint32_t Unmask(uint32_t masked_crc) {
   uint32_t rot = masked_crc - kMaskDelta;
   return ((rot >> 17) | (rot << 15));
 }
+
+template <typename T>
+extern std::string NumberToString ( T Number );
+
+template <typename T>
+extern  T StringToNumber ( const std::string &Text );
 
 }  // namespace crc32c
 

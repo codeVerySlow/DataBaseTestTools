@@ -3,8 +3,8 @@
 #include <assert.h>
 #include "SCSFileComparer.h"
 #include "SCSResultIter.h"
-#include "src/util/SCSSortCache.h"
-#include "src/util/SCSCrc32c.h"
+#include "util/SCSSortCache.h"
+#include "util/SCSCrc32c.h"
 
 CSCSFileComparer::CSCSFileComparer()
 {
@@ -94,7 +94,7 @@ void CSCSFileComparer::WriteCRCToCache(CSCSResultIter *iter,const std::string &f
 			*min=crc;
 		}
 		(*total)++;
-		assert(cache<<crc<<"\n");
+		cache<<crc32c::NumberToString(crc)<<"\n";
 	}
 }
 
@@ -107,7 +107,7 @@ std::vector<unsigned int> CSCSFileComparer::ReadCRCFromFile(const std::string &f
 
 	while(cache.Read(&line))
 	{
-		unsigned int uiline=std::stoul(line);
+		unsigned int uiline=crc32c::StringToNumber<unsigned int>(line);
 		if(uiline>min&&uiline<max)
 		{
 			result.push_back(uiline);
@@ -118,7 +118,7 @@ std::vector<unsigned int> CSCSFileComparer::ReadCRCFromFile(const std::string &f
 
 void CSCSFileComparer::WriteSortCRCToFile(std::vector<unsigned int> vecCRC,const std::string &fileName)
 {
-	std::ofstream file(fileName);
+	std::ofstream file(fileName.c_str());
 	assert(file.is_open());
 	std::vector<unsigned int>::iterator iter=vecCRC.begin();
 
@@ -175,4 +175,9 @@ bool CSCSFileComparer::CompareSequence(CSCSResultIter *iter1,CSCSResultIter *ite
 			return false;
 		}
 	}
+}
+
+boost::shared_ptr<const CSCSReport> CSCSFileComparer::GetReport() const
+{
+	return boost::shared_ptr<const CSCSReport>();
 }
