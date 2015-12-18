@@ -26,7 +26,7 @@ std::vector<std::string> CSCSResultIter::GetNext()
 	int i;
 	for(i=0;i<50;i++)
 	{
-		m_vecCurrentData.push_back(crc32c::NumberToString(i));
+		m_vecCurrentData.push_back(crc32c::NumberToString(i+index));
 	}
 	index++;
 	return m_vecCurrentData;
