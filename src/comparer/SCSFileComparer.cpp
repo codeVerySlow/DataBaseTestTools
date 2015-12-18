@@ -26,7 +26,7 @@ bool CSCSFileComparer::Compare(CSCSResultIter *iter1,CSCSResultIter *iter2)
 
 	while(1)
 	{
-		if(cache1.Read(&crc1)||cache2.Read(&crc2))
+		if(!cache1.Read(&crc1)||!cache2.Read(&crc2))
 		{
 			break;
 		}
@@ -36,7 +36,7 @@ bool CSCSFileComparer::Compare(CSCSResultIter *iter1,CSCSResultIter *iter2)
 			return false;
 		}
 	}
-	return cache1.Read(&crc1)&&cache2.Read(&crc2);
+	return !cache1.Read(&crc1)&&!cache2.Read(&crc2);
 }
 
 bool CSCSFileComparer::CompareSequence(CSCSResultIter *iter1,CSCSResultIter *iter2)

@@ -24,7 +24,7 @@ CSCSSortCache::CSCSSortCache(const std::string &cacheName)
 
 CSCSSortCache::~CSCSSortCache()
 {
-	
+	m_fileCache.close();	
 }
 
 bool CSCSSortCache::Append(const unsigned int &key)
@@ -39,7 +39,7 @@ bool CSCSSortCache::Append(const unsigned int &key)
 		m_setMemoryCache.insert(key);	
 	}
 	
-	m_fileCache<<key<<std::endl;
+	m_fileCache<<key<<" ";
 
 	total++;
 
@@ -54,8 +54,8 @@ bool CSCSSortCache::Short()
 		return true;
 	}	
 	
-	CSCSExternSort extSort((m_cacheName+"_cache").c_str(),m_cacheName.c_str(),total/100);
-	extSort.sort()
+	CSCSExternSort extSort((m_cacheName+"_cache").c_str(),m_cacheName.c_str(),total+100-1/100);
+	extSort.sort();
 	return true;
 }
 
@@ -78,12 +78,7 @@ bool CSCSSortCache::Read(unsigned int *key)
 	}
 	else 
 	{
-		std::string line;
-		if(getline(m_fileCache,line))
-		{
-			*key=crc32c::StringToNumber<unsigned int>(line);
-			return true;
-		}
+		return m_fileCache>>*key;
 	}
 
 	return false;

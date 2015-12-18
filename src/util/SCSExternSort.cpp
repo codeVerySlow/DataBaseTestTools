@@ -20,14 +20,14 @@ void CSCSExternSort::sort()
 
 	//归并临时文件内容到输出文件  
 	//merge_sort(file_count); 
-	ls=new int[k];
-	b=new int[k+1];
+	ls=new unsigned int[k];
+	b=new unsigned int[k+1];
 	K_Merge();
 	delete []ls;
 	delete []b;
 
 	time_t end = time(NULL);  
-	//printf("total time:%f\n", (end - start) * 1000.0/ CLOCKS_PER_SEC);  
+	printf("total time:%f\n", (end - start) * 1000.0/ CLOCKS_PER_SEC);  
 }  
 
 CSCSExternSort::CSCSExternSort(const char *input_file, const char * out_file, int count)
@@ -45,19 +45,19 @@ CSCSExternSort::~CSCSExternSort()
 	delete [] m_out_file;  
 } 
 
-int CSCSExternSort::read_data(FILE* f, int a[], int n)
+int CSCSExternSort::read_data(FILE* f, unsigned int a[], int n)
 {  
-	int i = 0;  
-	while(i < n && (fscanf(f, "%d", &a[i]) != EOF)) i++;  
+	int i = 0;   
+	while(i < n && (fscanf(f, "%u", &a[i]) != EOF)) i++;  
 	//printf("read:%d integer\n", i);  
 	return i;  
 }
 
-void CSCSExternSort::write_data( FILE* f, int a[], int n )
+void CSCSExternSort::write_data( FILE* f, unsigned int a[], int n )
 {  
 	for(int i = 0; i < n; ++i)  
-		fprintf(f, "%d ", a[i]);  
-	fprintf(f,"%d",MAX);//在最后写上一个最大值
+		fprintf(f, "%u ", a[i]);  
+	fprintf(f,"%u",MAX);//在最后写上一个最大值
 } 
 
 char* CSCSExternSort::temp_filename( int index )
@@ -69,19 +69,30 @@ char* CSCSExternSort::temp_filename( int index )
 
 int CSCSExternSort::cmp_int( const void *a, const void *b )
 {  
-	return *(int*)a - *(int*)b;  
+	if(*(unsigned int*)a > *(unsigned int*)b)
+	{
+		return 1;
+	}
+	else if(*(unsigned int*)a == *(unsigned int*)b)
+	{
+		return 0;
+	}
+	else
+	{
+		return -1;
+	}
 } 
 
 int CSCSExternSort::memory_sort()
 {  
 	FILE* fin = fopen(m_in_file, "rt");  
 	int n = 0, file_count = 0;  
-	int *array = new int[m_count];  
+	unsigned int *array = new unsigned int[m_count];  
 
 	//每读入m_count个整数就在内存中做一次排序，并写入临时文件  
 	while(( n = read_data(fin, array, m_count)) > 0)  
 	{  
-		qsort(array, n, sizeof(int), cmp_int);     
+		qsort(array, n, sizeof(unsigned int), cmp_int);     
 		//这里，调用了库函数阿，在第四节的c实现里，不再调用qsort。  
 		char *fileName = temp_filename(file_count++);  
 		FILE *tempFile = fopen(fileName, "w");  
@@ -138,7 +149,7 @@ void CSCSExternSort::K_Merge()
 
 	for(i = 0; i < k; ++i)  //初始读取
 	{  
-		if(fscanf(farray[i], "%d", &b[i]) == EOF)//读每个文件的第一个数到data数组  
+		if(fscanf(farray[i], "%u", &b[i]) == EOF)//读每个文件的第一个数到data数组  
 		{
 			//printf("there is no %d file to merge!",k);
 			return;
@@ -152,13 +163,13 @@ void CSCSExternSort::K_Merge()
 	{
 		q=ls[0];//q用来存储b中最小值的位置，同时也对应一路文件
 		//output(q);
-		fprintf(fout,"%d ",b[q]);
+		fprintf(fout,"%u ",b[q]);
 		//input(b[q],q);
-		fscanf(farray[q],"%d",&b[q]);
+		fscanf(farray[q],"%u",&b[q]);
 		Adjust(q);
 	}
 	//output(ls[0]);
-	fprintf(fout,"%d ",b[ls[0]]);
+	fprintf(fout,"%u ",b[ls[0]]);
 	//delete [] hasNext;  
 	//delete [] data;  
 
