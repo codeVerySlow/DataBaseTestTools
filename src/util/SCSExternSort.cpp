@@ -1,4 +1,15 @@
+#include <ctime>  
+#include <fstream>  
+#include <cassert> 
+#include <iostream>  
+
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
 #include "SCSExternSort.h"
+
+using namespace std;
 
 void CSCSExternSort::sort()
 {  
