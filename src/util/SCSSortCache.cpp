@@ -108,21 +108,26 @@ void CSCSSortCache::WriteMemoryCRCToFile(std::multiset<unsigned int> setCRC,std:
 
 
 bool CSCSSortCache::Read(std::string *key)
-{
-	if(m_iterCurrent==m_setMemoryCache.end())
-	{
-		return false;
-	}
-
+{	
 	if(!isReadModel)
 	{
 		isReadModel=true;
 		m_iterCurrent=m_setMemoryCache.begin();
 	}
 
-	*key=*m_iterCurrent++;
-
-	return true;
+	if(m_setMemoryCache!=m_setMemoryCache.end())
+	{
+		*key=*m_iterCurrent++;
+		return true;
+	}
+	else if(total>MEMORY_SET_MAX)
+	{
+		return getline(m_setMemoryCache,*key);
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void CSCSSortCache::Delete()

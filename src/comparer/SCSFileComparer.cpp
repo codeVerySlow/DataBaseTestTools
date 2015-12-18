@@ -12,19 +12,18 @@ CSCSFileComparer::CSCSFileComparer()
 
 bool CSCSFileComparer::Compare(CSCSResultIter *iter1,CSCSResultIter *iter2)
 {
-	SortResultIter(iter1,"sort_crc_1");
-	SortResultIter(iter2,"sort_crc_2");
+	CSCSSortCache cache1("sort_crc_1");
+	CSCSSortCache cache2("sort_crc_2");
 
-	std::ifstream file1("sort_crc_1");
-	std::ifstream file2("sort_crc_2");
+	WriteCRCToCache(iter1,cache1);
+	WriteCRCToCache(iter2,cache2);
+
 	std::string crc1;
 	std::string crc2;
 
 	while(1)
 	{
-		getline(file1,crc1);
-		getline(file2,crc2);
-		if(file1.eof()||file2.eof())
+		if(cache1.Read(crc1)||cache2.Read(crc2))
 		{
 			break;
 		}
@@ -34,64 +33,8 @@ bool CSCSFileComparer::Compare(CSCSResultIter *iter1,CSCSResultIter *iter2)
 			return false;
 		}
 	}
-	if(file1.eof()&&file2.eof())
-	{
-		file1.close();
-		file2.close();
-		return true;
-	}
-	else
-	{
-		file1.close();
-		file2.close();
-		return false;
-	}
+	return cache1.Read(crc1)&&cache2.Read(crc2)
 }
-
-void CSCSFileComparer::SortResultIter(CSCSResultIter *iter,const std::string &fileName)
-{
-
-	unsigned int max,min,total,k=10240000;
-	WriteCRCToCache(iter,"unsort_crc",&max,&min,&total);
-}
-
-void CSCSFileComparer::WriteCRCToCache(CSCSResultIter *iter,CSCSSortCache &cache)
-{
-
-
-	while(1)
-	{
-		std::vector<std::string> iterData=iter->GetNext();
-
-		if(iterData.size()==0)
-		{
-			break;
-		}
-
-		std::vector<std::string>::iterator iterator=iterData.begin();
-		std::string combinStr;
-
-		while(iterator!=iterData.end())
-		{
-			combinStr+=*iterator++;	
-			combinStr+=" ";
-		}
-
-		WriteToFile(combinStr,iter->GetCaseId());
-
-		unsigned int crc=crc32c::Value(combinStr.c_str(),combinStr.size());
-
-		cache<<crc;
-	}
-}
-
-
-void CSCSFileComparer::WriteToFile(const std::string &data,const std::string &fileName)
-{
-	
-}
-
-
 
 bool CSCSFileComparer::CompareSequence(CSCSResultIter *iter1,CSCSResultIter *iter2)
 {
@@ -137,4 +80,30 @@ bool CSCSFileComparer::CompareSequence(CSCSResultIter *iter1,CSCSResultIter *ite
 boost::shared_ptr<const CSCSReport> CSCSFileComparer::GetReport() const
 {
 	return boost::shared_ptr<const CSCSReport>();
+}
+
+void CSCSFileComparer::WriteCRCToCache(CSCSResultIter *iter,CSCSSortCache &cache)
+{
+	while(1)
+	{
+		std::vector<std::string> iterData=iter->GetNext();
+
+		if(iterData.size()==0)
+		{
+			break;
+		}
+
+		std::vector<std::string>::iterator iterator=iterData.begin();
+		std::string combinStr;
+
+		while(iterator!=iterData.end())
+		{
+			combinStr+=*iterator++;	
+			combinStr+=" ";
+		}
+
+		unsigned int crc=crc32c::Value(combinStr.c_str(),combinStr.size());
+
+		cache<<crc;
+	}
 }

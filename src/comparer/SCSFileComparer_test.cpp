@@ -42,40 +42,6 @@ std::string CSCSResultIter::GetCaseId()
 	return "100";
 }
 
-std::multiset<std::string> CSCSSortCache::m_setMemoryCache;
-
-CSCSSortCache::CSCSSortCache(const std::string &cacheName):isReadModel(false)
-{
-}
-
-bool CSCSSortCache::Append(const std::string &key)
-{
-	if(!isReadModel)
-	{
-		m_setMemoryCache.insert(key);	
-	}
-	return !isReadModel;
-}
-
-bool CSCSSortCache::Read(std::string *key)
-{
-	if(!isReadModel)
-	{
-		isReadModel=true;
-		iterCurrent=m_setMemoryCache.begin();
-	}
-	if(iterCurrent!=m_setMemoryCache.end())
-	{
-		*key=*iterCurrent;
-	}
-	return iterCurrent++!=m_setMemoryCache.end();
-}
-
-void CSCSSortCache::Delete()
-{
-	m_setMemoryCache.clear();
-}
-
 int main(void)
 {
 	CSCSFileComparer c;
