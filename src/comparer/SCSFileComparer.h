@@ -1,10 +1,10 @@
+#ifndef _COMPARER_SCSFILECOMPARER_H_
+#define _COMPARER_SCSFILECOMPARER_H__
 #include <boost/shared_ptr.hpp>
-#include <vector>
-#include <string>
-#include <fstream>
 #include "SCSComparer.h"
 
 class CSCSReport;
+class CSCSSortCache;
 
 class CSCSFileComparer:public CSCSComparer
 {
@@ -14,5 +14,6 @@ class CSCSFileComparer:public CSCSComparer
 		bool CompareSequence(CSCSResultIter *iter1,CSCSResultIter *iter2);
 		boost::shared_ptr<const CSCSReport> GetReport() const;
 	private:
-		void WriteCRCToCache(CSCSResultIter *iter,const std::string &fileName,unsigned int *max,unsigned int *min,unsigned int *total);
+		void WriteCRCToCache(CSCSResultIter *iter,CSCSSortCache &fileName);
 };
+#endif

@@ -17,13 +17,16 @@ bool CSCSFileComparer::Compare(CSCSResultIter *iter1,CSCSResultIter *iter2)
 
 	WriteCRCToCache(iter1,cache1);
 	WriteCRCToCache(iter2,cache2);
+	
+	cache1.Short();
+	cache2.Short();
 
-	std::string crc1;
-	std::string crc2;
+	unsigned int crc1;
+	unsigned int crc2;
 
 	while(1)
 	{
-		if(cache1.Read(crc1)||cache2.Read(crc2))
+		if(cache1.Read(&crc1)||cache2.Read(&crc2))
 		{
 			break;
 		}
@@ -33,7 +36,7 @@ bool CSCSFileComparer::Compare(CSCSResultIter *iter1,CSCSResultIter *iter2)
 			return false;
 		}
 	}
-	return cache1.Read(crc1)&&cache2.Read(crc2)
+	return cache1.Read(&crc1)&&cache2.Read(&crc2);
 }
 
 bool CSCSFileComparer::CompareSequence(CSCSResultIter *iter1,CSCSResultIter *iter2)

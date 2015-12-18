@@ -3,13 +3,15 @@ OPT=-g
 CFLAGS= -I../ -I../../include $(OPT)
 
 
-comparertest:SCSFileComparer.o SCSFileComparer_test.o ../util/SCSCrc32c.o
-	g++ -o comparertest SCSFileComparer.o SCSFileComparer_test.o ../util/SCSCrc32c.o $(OPT)
+comparertest:SCSFileComparer.o SCSFileComparer_test.o ../util/SCSCrc32c.o ../util/SCSSortCache.o
+	g++ -o comparertest SCSFileComparer.o SCSFileComparer_test.o ../util/SCSCrc32c.o ../util/SCSSortCache.o $(OPT)
 SCSFileComparer.o:SCSFileComparer.cpp ../../include/SCSResultIter.h ../util/SCSCrc32c.h ../util/SCSSortCache.h
 	cc -c SCSFileComparer.cpp $(CFLAGS) 
 SCSFileComparer_test.o:SCSFileComparer_test.cpp
 	cc -c SCSFileComparer_test.cpp $(CFLAGS)
 ../util/SCSCrc32c.o:../util/SCSCrc32c.cpp
 	cc -c -o ../util/SCSCrc32c.o  ../util/SCSCrc32c.cpp $(OPT)
+../util/SCSSortCache.o:../util/SCSSortCache.cpp
+	cc -c -o ../util/SCSSortCache.o ../util/SCSSortCache.cpp $(OPT)
 clean:
-	rm SCSFileComparer.o SCSFileComparer_test.o ../util/SCSCrc32c.o comparertest
+	rm SCSFileComparer.o SCSFileComparer_test.o ../util/SCSCrc32c.o ../util/SCSSortCache.o comparertest
