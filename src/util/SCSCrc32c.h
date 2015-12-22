@@ -40,21 +40,6 @@ inline uint32_t Unmask(uint32_t masked_crc) {
   return ((rot >> 17) | (rot << 15));
 }
 
-template <typename T>
-std::string NumberToString ( T Number )
-{
-	std::ostringstream ss;
-	ss << Number;
-	return ss.str();
-}
-
-template <typename T>
-T StringToNumber ( const std::string &Text )
-{
-	std::istringstream ss(Text);
-	T result;
-	return ss >> result ? result : 0;
-}
 }  // namespace crc32c
 
 #endif  // STORAGE_LEVELDB_UTIL_CRC32C_H_

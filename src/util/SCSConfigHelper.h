@@ -31,27 +31,10 @@ const int SEnumName<EMModel>::Count=2;
 template<>
 const char*  SEnumName<EMModel>::List[]=
 {
-	"scsdb",
-	"mysql"
+	"scsdb-scsdb",
+	"scsdb-mysql"
 };
 
-enum EMCharset
-{
-	UTF8,
-	GBK,
-	LATIN1
-};
-
-template<>
-const int SEnumName<EMCharset>::Count=3;
-
-template<>
-const char* SEnumName<EMCharset>::List[]=
-{
-	"utf8",
-	"gbk",
-	"latin1"	
-};
 struct STConnect
 {
 	std::string strIP;
@@ -63,15 +46,14 @@ struct STConnect
 
 struct STConfig
 {
-	STConnect SrcConnect;
-	STConnect DesConnect;
-	STConnect SrcMysqlConnect;
-	EMModel Model;
-	EMCharset Charset;
-	int Cycle;
-	bool Loginfo;
-	bool Slavestatus;
-	std::string ResultPath;
+	STConnect conSrcConnect;
+	STConnect conDesConnect;
+	STConnect conSrcMysqlConnect;
+	EMModel emModel;
+	std::string strCharset;
+	int nCycle;
+	bool checkSlavestatus;
+	std::string strModules;
 };
 
 class CSCSConfigHelper
@@ -79,11 +61,12 @@ class CSCSConfigHelper
 	public:
 		static const CSCSConfigHelper* GetInstance();
 		~CSCSConfigHelper();
-		const STConfig* Read() const;
+		bool Read() const;
+		const STConfig* GetConfig() const;
 	private:
 		CSCSConfigHelper();
 		static STConfig* config;
-		static const  CSCSConfigHelper* instance;
+		static CSCSConfigHelper* const instance;
 
 		bool IsSpace(const char c);
 		void Trim(std::string *str);
@@ -91,7 +74,7 @@ class CSCSConfigHelper
 		bool AnalyseLine(const std::string &line,std::string *key,std::string *value);
 		bool IsCategory(const std::string &line,std::string *category);
 		template <typename EnumType>
-			EnumType ConvertStringToEnum( const char *pStr);
+		EnumType ConvertStringToEnum( const char *pStr);
 };
 
 #endif

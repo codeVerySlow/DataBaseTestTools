@@ -11,7 +11,6 @@ public:
 	CSCSReader() {};
 	virtual ~CSCSReader() {};
 	virtual boost::shared_ptr<CSCSPreparedSQLSet> ReadNextTestCase()=0;
-	static boost::shared_ptr<CSCSReader> Create();
 };
 
 #endif
