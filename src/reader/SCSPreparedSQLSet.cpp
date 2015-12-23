@@ -12,7 +12,7 @@ bool CSCSPreparedSQLSet::GetNext(STSQLPair *pair)
 	
 	if(m_vecSQLDestination.empty())
 	{
-		return false
+		return false;
 	}
 	pair->strSQLDestination = m_vecSQLDestination.back();
 	m_vecSQLDestination.pop_back();
@@ -27,15 +27,17 @@ CSCSPreparedSQLSet::CSCSPreparedSQLSet(const std::vector<std::string> &vecSQLSou
 									   bool checkSequence, 
 									   std::string strModule, 
 									   int nExecTimes, 
-									   bool checkDataNodes)
-	:m_vecSQLSource(vecSQLSource),
-	 m_vecSQLDestination(vecSQLDestination),
-	 m_nCurrentIndex(0),
+									   bool checkDataNodes,
+									   bool init)
+	 :m_nCurrentIndex(0),
 	 m_nTotal(vecSQLSource.size()),
 	 m_checkSequence(checkSequence),
 	 m_strModule(strModule),
 	 m_nExecTimes(nExecTimes),
-	 m_checkDataNodes(checkDataNodes)
+	 m_checkDataNodes(checkDataNodes),
+	 m_init(init),
+	 m_vecSQLSource(vecSQLSource),
+	 m_vecSQLDestination(vecSQLDestination)
 {
 
 }

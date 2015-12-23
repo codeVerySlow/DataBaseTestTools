@@ -1,3 +1,6 @@
+#include <string>
+#include <vector>
+#include <sstream>
 
 namespace SCSUtilTools{
 	std::vector<std::string>& split(const std::string &s, char delim, std::vector<std::string> &elems) {
@@ -17,7 +20,7 @@ namespace SCSUtilTools{
 	}
 
 	std::string join(const std::vector<std::string> &vec,const std::string &delim){
-		std::vector<std::string>::iterator it;
+		std::vector<std::string>::const_iterator it;
 		std::string str;
 		for(it=vec.begin();it!=vec.end();it++)
 		{
@@ -25,7 +28,7 @@ namespace SCSUtilTools{
 			{
 				str+=delim;
 			}
-			str+=it;
+			str+=*it;
 		}
 		return str;
 	}

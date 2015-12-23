@@ -1,0 +1,22 @@
+OPT= -g
+
+CFLAG= -I../ -I../../include $(OPT)
+
+
+readertest:SCSReaderTest.o SCSMySqlReader.o SCSPreparedSQLSet.o ../util/SCSMySqlHelper.o ../util/SCSConfigHelper.o ../util/SCSUtilTools.o 
+	g++ -o readertest SCSReaderTest.o SCSMySqlReader.o SCSPreparedSQLSet.o ../util/SCSMySqlHelper.o ../util/SCSConfigHelper.o ../util/SCSUtilTools.o $(OPT)
+SCSReaderTest.o:../../include/SCSPreparedSQLSet.h ../util/SCSConfigHelper.h
+	cc -c  $(CFLAG) SCSReaderTest.cpp
+SCSPreparedSQLSet.o:SCSPreparedSQLSet.cpp
+	cc -c $(CFLAG) SCSPreparedSQLSet.cpp
+SCSMySqlReader.o:../../include/SCSPreparedSQLSet.h ../util/SCSMySqlHelper.h ../util/SCSConfigHelper.h ../util/SCSUtilTools.h
+	cc -c $(CFLAG) SCSMySqlReader.cpp -L../../lib -lmysqlcppconn-static
+../util/SCSMySqlHelper.o:../util/SCSMySqlHelper.cpp
+	cc -c  $(CFLAG) -o ../util/SCSMySqlHelper.o ../util/SCSMySqlHelper.cpp
+../util/SCSConfigHelper.o:../util/SCSUtilTools.h
+	cc -c $(CFLAG) -o ../util/SCSUtilTools.o  ../util/SCSConfigHelper.cpp
+../util/SCSUtilTools.o:../util/SCSUtilTools.cpp
+	cc -c $(CFLAG) -o ../util/SCSUtilTools.o ../util/SCSUtilTools.cpp
+
+clean:
+	-rm -f *.o ../util/*.o

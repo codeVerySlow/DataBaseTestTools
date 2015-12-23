@@ -1,6 +1,6 @@
-#include "include/SCSMySqlHelper.h"
+#include "SCSMySqlHelper.h"
 
-bool CSCSMySqlHelper::ConnMySql(const char *host,const char *port,const char *user,const char *pwd,const char *db,const char *charset,const char *msg)
+bool CSCSMySqlHelper::ConnMySql(const char *host,const int port,const char *user,const char *pwd,const char *db,const char *charset,const char *msg)
 {
 	if(mysql_init(&mysql)==NULL)
 	{
@@ -23,9 +23,8 @@ bool CSCSMySqlHelper::ConnMySql(const char *host,const char *port,const char *us
 	return true;
 }
 
-bool CSCSMySqlHelper::Select(const char *sql,std::vector<std::vector<std::string> > *result,char *msg)
+bool CSCSMySqlHelper::Select(const char *sql,std::vector<std::vector<std::string> > *result,const char *msg)
 {
-	MYSQL_ROW m_row;
 	MYSQL_RES *m_res;
 
 	if(!mysql_query(&mysql,sql))
@@ -44,7 +43,7 @@ bool CSCSMySqlHelper::Select(const char *sql,std::vector<std::vector<std::string
 	int i;
 
 	std::vector<std::string> columns;
-	for(i=0;fd=mysql_fetch_field(m_res);i++)//获取列名
+	while((fd=mysql_fetch_field(m_res)))//获取列名
 	{
 		std::string column(fd->name);
 		columns.push_back(column);
@@ -56,7 +55,7 @@ bool CSCSMySqlHelper::Select(const char *sql,std::vector<std::vector<std::string
 	MYSQL_ROW sql_row;
 	int j=mysql_num_fields(m_res);
 
-	while(sql_row=mysql_fetch_row(m_res))//获取具体的数据
+	while((sql_row=mysql_fetch_row(m_res)))//获取具体的数据
 	{
 		std::vector<std::string> datarows;
 		for(i=0;i<j;i++)

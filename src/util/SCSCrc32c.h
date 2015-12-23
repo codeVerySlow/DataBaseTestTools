@@ -8,7 +8,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string>
-#include <sstream>
 
 namespace crc32c {
 

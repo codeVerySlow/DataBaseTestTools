@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_SCSCONFIGHELPER_H_
-#define _INCLUDE_SCSCONFIGHELPER_H_
+#ifndef _UTIL_SCSCONFIGHELPER_H_
+#define _UTIL_SCSCONFIGHELPER_H_
 #include <iostream>
 #include <string>
 #include <map>
@@ -14,26 +14,18 @@ struct SEnumName
 
 enum EMDataBaseType
 {
-	SCSDB,
-	MYSQL,
-	ORACL
+	DataBaseType_SCSDB,
+	DataBaseType_MYSQL,
+	DataBaseType_ORACL
 };
 
 enum EMModel
 {
-	SCSDB,
-	MYSQL
+	Model_SCSDB_SCSDB,
+	Model_SCSDB_MYSQL
 };
 
-template<>
-const int SEnumName<EMModel>::Count=2;
 
-template<>
-const char*  SEnumName<EMModel>::List[]=
-{
-	"scsdb-scsdb",
-	"scsdb-mysql"
-};
 
 struct STConnect
 {
@@ -59,15 +51,14 @@ struct STConfig
 class CSCSConfigHelper
 {
 	public:
-		static const CSCSConfigHelper* GetInstance();
+		static CSCSConfigHelper* GetInstance();
 		~CSCSConfigHelper();
-		bool Read() const;
-		const STConfig* GetConfig() const;
+		bool Read();
+		static const STConfig* GetConfig();
 	private:
 		CSCSConfigHelper();
-		static STConfig* config;
-		static CSCSConfigHelper* const instance;
 
+		static STConfig* Config();
 		bool IsSpace(const char c);
 		void Trim(std::string *str);
 		bool IsCommentChar(const char c);

@@ -1,5 +1,5 @@
 #ifndef _COMPARER_SCSFILECOMPARER_H_
-#define _COMPARER_SCSFILECOMPARER_H__
+#define _COMPARER_SCSFILECOMPARER_H_
 #include <boost/shared_ptr.hpp>
 #include "SCSComparer.h"
 

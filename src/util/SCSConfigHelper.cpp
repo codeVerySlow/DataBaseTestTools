@@ -2,14 +2,19 @@
 #include <iostream>
 #include <string.h>
 
-#include "DBLog.h"
 #include "SCSConfigHelper.h"
-#include "SCSCrc32c.h"
+#include "SCSUtilTools.h"
 #define COMMENT_CHAR '#'
 
-STConfig* CSCSConfigHelper::config=new STConfig;
+template<>
+const int SEnumName<EMModel>::Count=2;
 
-CSCSConfigHelper* const CSCSConfigHelper::instance=new CSCSConfigHelper;
+template<>
+const char*  SEnumName<EMModel>::List[]=
+{
+	"scsdb-scsdb",
+	"scsdb-mysql"
+};
 
 CSCSConfigHelper::CSCSConfigHelper()
 {
@@ -21,12 +26,13 @@ CSCSConfigHelper::~CSCSConfigHelper()
 
 }
 
-const CSCSConfigHelper*  CSCSConfigHelper::GetInstance()
+CSCSConfigHelper*  CSCSConfigHelper::GetInstance()
 {
-	return CSCSConfigHelper::instance;
+	static CSCSConfigHelper instance;
+	return &instance;
 }
 
-bool CSCSConfigHelper::Read()
+bool CSCSConfigHelper::Read() 
 {
 	std::map<std::string,std::map<std::string,std::string> > m;
 	std::ifstream infile("/etc/scs/RoboTester.conf");
@@ -52,32 +58,38 @@ bool CSCSConfigHelper::Read()
 
 	infile.close();
 
-	CSCSConfigHelper::config->conSrcConnect.strPwd=m["src_scsdb"]["pwd"];
-	CSCSConfigHelper::config->conSrcConnect.strIP=m["src_scsdb"]["hosts"];
-	CSCSConfigHelper::config->conSrcConnect.strUser=m["src_scsdb"]["user"];
-	CSCSConfigHelper::config->conSrcConnect.strDataBase=m["src_scsdb"]["db"];
-	CSCSConfigHelper::config->conSrcConnect.strPort=m["src_scsdb"]["port"];
+	Config()->conSrcConnect.strPwd=m["src_scsdb"]["pwd"];
+	Config()->conSrcConnect.strIP=m["src_scsdb"]["hosts"];
+	Config()->conSrcConnect.strUser=m["src_scsdb"]["user"];
+	Config()->conSrcConnect.strDataBase=m["src_scsdb"]["db"];
+	Config()->conSrcConnect.strPort=m["src_scsdb"]["port"];
 
-	CSCSConfigHelper::config->conDesConnect.strPwd=m["dest_scsdb"]["pwd"];
-	CSCSConfigHelper::config->conDesConnect.strIP=m["dest_scsdb"]["hosts"];
-	CSCSConfigHelper::config->conDesConnect.strUser=m["dest_scsdb"]["user"];
-	CSCSConfigHelper::config->conDesConnect.strDataBase=m["dest_scsdb"]["db"];
-	CSCSConfigHelper::config->conDesConnect.strPort=m["dest_scsdb"]["port"];
+	Config()->conDesConnect.strPwd=m["dest_scsdb"]["pwd"];
+	Config()->conDesConnect.strIP=m["dest_scsdb"]["hosts"];
+	Config()->conDesConnect.strUser=m["dest_scsdb"]["user"];
+	Config()->conDesConnect.strDataBase=m["dest_scsdb"]["db"];
+	Config()->conDesConnect.strPort=m["dest_scsdb"]["port"];
 
-	CSCSConfigHelper::config->emModel=ConvertStringToEnum<EMModel>(m["mode"]["mode"].c_str());	
-	CSCSConfigHelper::config->strCharset=m["charset"]["charset"];
+	Config()->emModel=ConvertStringToEnum<EMModel>(m["mode"]["mode"].c_str());	
+	Config()->strCharset=m["charset"]["charset"];
 
-	CSCSConfigHelper::config->nCycle=crc32c::StringToNumber<int>(m["cycle"]["cycle"]);
-	CSCSConfigHelper::config->checkSlavestatus=(m["slavestatus"]["slavestatus"]=="on");
+	Config()->nCycle=SCSUtilTools::StringToNumber<int>(m["cycle"]["cycle"]);
+	Config()->checkSlavestatus=(m["slavestatus"]["slavestatus"]=="on");
 	
-	CSCSConfigHelper::config->strModules=m["modules"]["modules"];
+	Config()->strModules=m["modules"]["modules"];
 
 	return true;
 }
 
-const STConfig* CSCSConfigHelper::GetConfig()
+const STConfig* CSCSConfigHelper::GetConfig() 
 {
-	return CSCSConfigHelper::config;
+	return GetConfig();
+}
+
+STConfig* CSCSConfigHelper::Config()
+{
+	static STConfig config;
+	return &config;
 }
 
 bool CSCSConfigHelper::IsSpace(const char c)
@@ -90,7 +102,7 @@ void CSCSConfigHelper::Trim(std::string *str)
 	if(str->empty())
 	  return;
 
-	long  i,begin,end;
+	unsigned int  i,begin,end;
 	for(i=0;i<str->size();i++)
 	{
 		if(!IsSpace((*str)[i]))
