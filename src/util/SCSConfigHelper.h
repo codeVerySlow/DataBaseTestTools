@@ -42,7 +42,6 @@ struct STConfig
 	STConnect conDesConnect;
 	STConnect conSrcMysqlConnect;
 	EMModel emModel;
-	std::string strCharset;
 	int nCycle;
 	bool checkSlavestatus;
 	std::string strModules;
@@ -51,14 +50,25 @@ struct STConfig
 class CSCSConfigHelper
 {
 	public:
-		static CSCSConfigHelper* GetInstance();
+		static CSCSConfigHelper* GetInstance()
+		{
+			static CSCSConfigHelper configHelper;
+			return &configHelper;
+		}
 		~CSCSConfigHelper();
 		bool Read();
-		static const STConfig* GetConfig();
+		static const STConfig* GetConfig()
+		{
+			return Config();
+		}
 	private:
 		CSCSConfigHelper();
 
-		static STConfig* Config();
+		static STConfig* Config()
+		{
+			static STConfig config;
+			return &config;
+		}
 		bool IsSpace(const char c);
 		void Trim(std::string *str);
 		bool IsCommentChar(const char c);

@@ -1,6 +1,6 @@
 #include "SCSMySqlHelper.h"
 
-bool CSCSMySqlHelper::ConnMySql(const char *host,const int port,const char *user,const char *pwd,const char *db,const char *charset,const char *msg)
+bool CSCSMySqlHelper::ConnMySql(const char *host,const int port,const char *user,const char *pwd,const char *db,const char *charset,std::string &msg)
 {
 	if(mysql_init(&mysql)==NULL)
 	{
@@ -22,8 +22,8 @@ bool CSCSMySqlHelper::ConnMySql(const char *host,const int port,const char *user
 
 	return true;
 }
-
-bool CSCSMySqlHelper::Select(const char *sql,std::vector<std::vector<std::string> > *result,const char *msg)
+ 
+bool CSCSMySqlHelper::Select(const char *sql,std::vector<std::vector<std::string> > *result,std::string &msg)
 {
 	MYSQL_RES *m_res;
 

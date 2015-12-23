@@ -14,14 +14,14 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet *set)
 {
 	CSCSMySqlHelper mysql;
 	const STConfig *config =CSCSConfigHelper::GetInstance()->GetConfig();
-	const char *msg="";
+	std::string msg;
 
 	if(!mysql.ConnMySql(config->conSrcMysqlConnect.strIP.c_str(),
 					SCSUtilTools::StringToNumber<int>(config->conSrcMysqlConnect.strPort),
 					config->conSrcMysqlConnect.strUser.c_str(),
 					config->conSrcMysqlConnect.strPwd.c_str(),
 					config->conSrcConnect.strDataBase.c_str(),
-					config->strCharset.c_str(),
+					"UTF8",
 					msg))
 	{
 		std::cerr<< "open testcase srcMysql err:" << msg;
@@ -33,7 +33,7 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet *set)
 	casesql += SCSUtilTools::join(SCSUtilTools::split(config->strModules,','),"','");
 	casesql += "') and caseid>"+SCSUtilTools::NumberToString(nTestCaseId)+" LIMIT 1";
 
-	std::cout<<casesql<<std::endl;
+	std::cout << casesql << std::endl;
 
 	if(!mysql.Select(casesql.c_str(),&testTable,msg))
 	{

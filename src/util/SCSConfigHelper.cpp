@@ -26,11 +26,6 @@ CSCSConfigHelper::~CSCSConfigHelper()
 
 }
 
-CSCSConfigHelper*  CSCSConfigHelper::GetInstance()
-{
-	static CSCSConfigHelper instance;
-	return &instance;
-}
 
 bool CSCSConfigHelper::Read() 
 {
@@ -70,8 +65,14 @@ bool CSCSConfigHelper::Read()
 	Config()->conDesConnect.strDataBase=m["dest_scsdb"]["db"];
 	Config()->conDesConnect.strPort=m["dest_scsdb"]["port"];
 
+	Config()->conSrcMysqlConnect.strPwd=m["case_mysql"]["pwd"];
+	Config()->conSrcMysqlConnect.strIP=m["case_mysql"]["host"];
+	Config()->conSrcMysqlConnect.strUser=m["case_mysql"]["user"];
+	Config()->conSrcMysqlConnect.strDataBase=m["case_mysql"]["db"];
+	Config()->conSrcMysqlConnect.strPort=m["case_mysql"]["db"];
+
+
 	Config()->emModel=ConvertStringToEnum<EMModel>(m["mode"]["mode"].c_str());	
-	Config()->strCharset=m["charset"]["charset"];
 
 	Config()->nCycle=SCSUtilTools::StringToNumber<int>(m["cycle"]["cycle"]);
 	Config()->checkSlavestatus=(m["slavestatus"]["slavestatus"]=="on");
@@ -79,17 +80,6 @@ bool CSCSConfigHelper::Read()
 	Config()->strModules=m["modules"]["modules"];
 
 	return true;
-}
-
-const STConfig* CSCSConfigHelper::GetConfig() 
-{
-	return GetConfig();
-}
-
-STConfig* CSCSConfigHelper::Config()
-{
-	static STConfig config;
-	return &config;
 }
 
 bool CSCSConfigHelper::IsSpace(const char c)
@@ -162,8 +152,8 @@ bool CSCSConfigHelper::AnalyseLine(const std::string &line,std::string *key,std:
 		return false;
 	}
 
-	*key=strconfig.substr(0,pos+1);
-	*value=strconfig.substr(pos,end-pos+1);
+	*key=strconfig.substr(0,pos);
+	*value=strconfig.substr(pos+1,end-pos+1);
 
 	return true;
 }
@@ -180,7 +170,7 @@ bool CSCSConfigHelper::IsCategory(const std::string &line,std::string *category)
 	{
 		if((end=line.find(']'))!=-1)
 		{
-			*category=line.substr(pos,end-pos+1);
+			*category=line.substr(pos+1,end-pos-1);
 			return true;
 		}
 	}
