@@ -10,7 +10,7 @@
 
 using namespace std;
 
-bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet *set)
+bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet &set)
 {
 	CSCSMySqlHelper mysql;
 	const STConfig *config =CSCSConfigHelper::GetInstance()->GetConfig();
@@ -20,7 +20,7 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet *set)
 					SCSUtilTools::StringToNumber<int>(config->conSrcMysqlConnect.strPort),
 					config->conSrcMysqlConnect.strUser.c_str(),
 					config->conSrcMysqlConnect.strPwd.c_str(),
-					config->conSrcConnect.strDataBase.c_str(),
+					config->conSrcMysqlConnect.strDataBase.c_str(),
 					"UTF8",
 					msg))
 	{
@@ -29,9 +29,19 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet *set)
 	}
 
 	vector<vector<string> > testTable;
-	string casesql = "Select * from caseslist where modules in ('";
-	casesql += SCSUtilTools::join(SCSUtilTools::split(config->strModules,','),"','");
-	casesql += "') and caseid>"+SCSUtilTools::NumberToString(nTestCaseId)+" LIMIT 1";
+	vector<string> modules(SCSUtilTools::split(config->strModules,","));
+
+	string casesql = "select * from caseslist";
+	casesql += " where caseid>"+SCSUtilTools::NumberToString(nTestCaseId);
+
+	if(modules.end()==find(modules.begin(),modules.end(),"all"))
+	{
+		casesql +=" and  modules in ('";
+		casesql += SCSUtilTools::join(modules,"','");
+		casesql +="')";
+	}
+	
+	casesql+=" LIMIT 1";
 
 	std::cout << casesql << std::endl;
 
@@ -51,11 +61,6 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet *set)
 	vector<string> vecDesCase;
 	GetTestCase("mysqlcases",testTable,vecDesCase);
 
-	if(NULL != set)
-	{
-		delete set;
-	}
-
 	bool checkSequence=testTable[1][GetColumnIndex("sequence_match",testTable[0])]=="1";
 	std::string  strModule=testTable[1][GetColumnIndex("modules",testTable[0])];
 	int nExecTimes=SCSUtilTools::StringToNumber<int>(testTable[1][GetColumnIndex("cases_execution_times",testTable[0])]);
@@ -63,7 +68,7 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet *set)
 	bool init = testTable[1][GetColumnIndex("init",testTable[0])]=="1";
 	nTestCaseId=SCSUtilTools::StringToNumber<int>(testTable[1][GetColumnIndex("caseid",testTable[0])]);
 
-	set = new CSCSPreparedSQLSet(vecSrcCase,vecDesCase,checkSequence,strModule,nExecTimes,checkDataNodes,init);
+	set = CSCSPreparedSQLSet(vecSrcCase,vecDesCase,checkSequence,strModule,nExecTimes,checkDataNodes,init);
 
 	return true;
 }
@@ -75,7 +80,7 @@ bool CSCSMySqlReader::GetTestCase( const std::string &column,const std::vector<s
 	{
 		return false;
 	}
-	vecTestCase = SCSUtilTools::split(vecTestTable[1][scsdbcaseIndex],',');
+	vecTestCase = SCSUtilTools::split(vecTestTable[1][scsdbcaseIndex],"###");
 
 	return true;
 }

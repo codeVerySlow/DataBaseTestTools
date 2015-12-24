@@ -15,6 +15,7 @@ struct STSQLPair
 class CSCSPreparedSQLSet
 {
 public:
+	CSCSPreparedSQLSet();
 	CSCSPreparedSQLSet( const std::vector<std::string> &vecSQLSource,
 						const std::vector<std::string> &vecSQLDestination,
 						bool checkSequence,
@@ -29,7 +30,7 @@ public:
 	int m_nExecTimes;
 	bool m_checkDataNodes;
 	bool m_init;
-	bool GetNext(STSQLPair *pair);
+	bool GetNext(STSQLPair &pair);
 private:
 	std::vector<std::string> m_vecSQLSource;
 	std::vector<std::string> m_vecSQLDestination;

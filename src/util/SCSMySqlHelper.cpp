@@ -27,7 +27,7 @@ bool CSCSMySqlHelper::Select(const char *sql,std::vector<std::vector<std::string
 {
 	MYSQL_RES *m_res;
 
-	if(!mysql_query(&mysql,sql))
+	if(mysql_query(&mysql,sql))
 	{
 		msg = "select query error";
 		return false;

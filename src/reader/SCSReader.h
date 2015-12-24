@@ -9,7 +9,7 @@ class CSCSReader{
 public:
 	CSCSReader() {};
 	virtual ~CSCSReader() {};
-    virtual	bool ReadNextTestCase(CSCSPreparedSQLSet *set)=0;
+    virtual	bool ReadNextTestCase(CSCSPreparedSQLSet &set)=0;
 };
 
 #endif

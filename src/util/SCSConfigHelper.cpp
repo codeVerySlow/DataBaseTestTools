@@ -48,6 +48,7 @@ bool CSCSConfigHelper::Read()
 		if(AnalyseLine(line,&key,&value))
 		{
 			m[category][key]=value;
+			std::cout<<category<<key<<":"<<m[category][key]<<std::endl;
 		}
 	}
 
@@ -69,7 +70,7 @@ bool CSCSConfigHelper::Read()
 	Config()->conSrcMysqlConnect.strIP=m["case_mysql"]["host"];
 	Config()->conSrcMysqlConnect.strUser=m["case_mysql"]["user"];
 	Config()->conSrcMysqlConnect.strDataBase=m["case_mysql"]["db"];
-	Config()->conSrcMysqlConnect.strPort=m["case_mysql"]["db"];
+	Config()->conSrcMysqlConnect.strPort=m["case_mysql"]["port"];
 
 
 	Config()->emModel=ConvertStringToEnum<EMModel>(m["mode"]["mode"].c_str());	
@@ -153,7 +154,7 @@ bool CSCSConfigHelper::AnalyseLine(const std::string &line,std::string *key,std:
 	}
 
 	*key=strconfig.substr(0,pos);
-	*value=strconfig.substr(pos+1,end-pos+1);
+	*value=strconfig.substr(pos+1,end-pos-1);
 
 	return true;
 }

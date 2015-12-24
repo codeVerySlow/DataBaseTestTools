@@ -14,7 +14,7 @@ class CSCSMySqlReader:public CSCSReader
 		CSCSMySqlReader();
 		~CSCSMySqlReader();
 
-		bool ReadNextTestCase(CSCSPreparedSQLSet *set);
+		bool ReadNextTestCase(CSCSPreparedSQLSet &set);
 	private:
 		int nTestCaseId;
 		bool GetTestCase(const std::string &column,

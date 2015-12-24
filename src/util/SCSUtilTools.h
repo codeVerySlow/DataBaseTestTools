@@ -20,9 +20,9 @@ namespace SCSUtilTools{
 		return ss >> result ? result : 0;
 	}
 
-	extern std::vector<std::string>& split(const std::string &s, char delim, std::vector<std::string> &elems);
+	extern std::vector<std::string>& split(const std::string &s, const std::string &delim, std::vector<std::string> &elems);
 
-	extern std::vector<std::string> split(const std::string &s, char delim);
+	extern std::vector<std::string> split(const std::string &s, const std::string &delim);
 
 	extern std::string join(const std::vector<std::string> &vec,const std::string &delim);
 

@@ -1,21 +1,19 @@
 #include "SCSPreparedSQLSet.h"
 
 
-bool CSCSPreparedSQLSet::GetNext(STSQLPair *pair)
+bool CSCSPreparedSQLSet::GetNext(STSQLPair &pair)
 {
-	if(m_vecSQLSource.empty())
+	if((std::vector<std::string>::size_type)m_nCurrentIndex==m_vecSQLSource.size())
 	{
 		return false;
 	}
-	pair->strSQLSource = m_vecSQLSource.back();
-	m_vecSQLSource.pop_back();
+	pair.strSQLSource = m_vecSQLSource[m_nCurrentIndex];
 	
-	if(m_vecSQLDestination.empty())
+	if((std::vector<std::string>::size_type)m_nCurrentIndex==m_vecSQLDestination.size())
 	{
 		return false;
 	}
-	pair->strSQLDestination = m_vecSQLDestination.back();
-	m_vecSQLDestination.pop_back();
+	pair.strSQLDestination = m_vecSQLDestination[m_nCurrentIndex];
 	
 	m_nCurrentIndex++;
 
@@ -38,6 +36,20 @@ CSCSPreparedSQLSet::CSCSPreparedSQLSet(const std::vector<std::string> &vecSQLSou
 	 m_init(init),
 	 m_vecSQLSource(vecSQLSource),
 	 m_vecSQLDestination(vecSQLDestination)
+{
+
+}
+
+CSCSPreparedSQLSet::CSCSPreparedSQLSet()
+	 :m_nCurrentIndex(0),
+	 m_nTotal(0),
+	 m_checkSequence(false),
+	 m_strModule(),
+	 m_nExecTimes(0),
+	 m_checkDataNodes(false),
+	 m_init(false),
+	 m_vecSQLSource(),
+	 m_vecSQLDestination()
 {
 
 }
