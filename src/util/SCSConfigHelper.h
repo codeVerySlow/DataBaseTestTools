@@ -30,7 +30,7 @@ enum EMModel
 struct STConnect
 {
 	std::string strIP;
-	std::string strPort;
+	int strPort;
 	std::string strUser;
 	std::string strPwd;
 	std::string strDataBase;
@@ -41,6 +41,7 @@ struct STConfig
 	STConnect conSrcConnect;
 	STConnect conDesConnect;
 	STConnect conSrcMysqlConnect;
+	STConnect conCaseMysqlConnect;
 	EMModel emModel;
 	int nCycle;
 	bool checkSlavestatus;
@@ -57,7 +58,7 @@ class CSCSConfigHelper
 		}
 		~CSCSConfigHelper();
 		bool Read();
-		static const STConfig* GetConfig()
+		const STConfig* GetConfig()
 		{
 			return Config();
 		}

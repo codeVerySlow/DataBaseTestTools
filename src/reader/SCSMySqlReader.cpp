@@ -8,6 +8,8 @@
 #include "util/SCSConfigHelper.h"
 #include "util/SCSUtilTools.h"
 
+#include "DBLog.h"
+
 using namespace std;
 
 bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet &set)
@@ -16,15 +18,15 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet &set)
 	const STConfig *config =CSCSConfigHelper::GetInstance()->GetConfig();
 	std::string msg;
 
-	if(!mysql.ConnMySql(config->conSrcMysqlConnect.strIP.c_str(),
-					SCSUtilTools::StringToNumber<int>(config->conSrcMysqlConnect.strPort),
-					config->conSrcMysqlConnect.strUser.c_str(),
-					config->conSrcMysqlConnect.strPwd.c_str(),
-					config->conSrcMysqlConnect.strDataBase.c_str(),
+	if(!mysql.ConnMySql(config->conCaseMysqlConnect.strIP.c_str(),
+					config->conCaseMysqlConnect.strPort,
+					config->conCaseMysqlConnect.strUser.c_str(),
+					config->conCaseMysqlConnect.strPwd.c_str(),
+					config->conCaseMysqlConnect.strDataBase.c_str(),
 					"UTF8",
 					msg))
 	{
-		std::cerr<< "open testcase srcMysql err:" << msg;
+		LOG_ERROR(("open testcase srcMysql err:"+msg).c_str());
 		return false;
 	}
 
@@ -43,11 +45,11 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet &set)
 	
 	casesql+=" LIMIT 1";
 
-	std::cout << casesql << std::endl;
+	LOG_DEBUG(casesql.c_str());
 
 	if(!mysql.Select(casesql.c_str(),&testTable,msg))
 	{
-		std::cerr<<"select caseslist err:"<<msg;
+		LOG_ERROR(("select caseslist err:"+msg).c_str());
 		return false;
 	}
 

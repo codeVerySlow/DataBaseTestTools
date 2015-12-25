@@ -25,8 +25,24 @@ bool CSCSMySqlHelper::ConnMySql(const char *host,const int port,const char *user
  
 bool CSCSMySqlHelper::Select(const char *sql,std::vector<std::vector<std::string> > *result,std::string &msg)
 {
-	MYSQL_RES *m_res;
+	InitSelect(sql,msg);
+	
+	std::vector<std::string> vecDatarow;
+	while(GetNextRow(vecDatarow))
+	{
+		result->push_back(vecDatarow);
+	}
 
+	return true;
+}
+
+void CSCSMySqlHelper::CloseMySql()
+{
+	mysql_close(&mysql);
+}
+
+bool CSCSMySqlHelper::InitSelect( const char *sql,std::string &msg )
+{
 	if(mysql_query(&mysql,sql))
 	{
 		msg = "select query error";
@@ -39,37 +55,40 @@ bool CSCSMySqlHelper::Select(const char *sql,std::vector<std::vector<std::string
 		return false;
 	}
 
-	MYSQL_FIELD *fd;
-	int i;
-
-	std::vector<std::string> columns;
-	while((fd=mysql_fetch_field(m_res)))//获取列名
-	{
-		std::string column(fd->name);
-		columns.push_back(column);
-	}
-
-	result->push_back(columns);
-
-	
-	MYSQL_ROW sql_row;
-	int j=mysql_num_fields(m_res);
-
-	while((sql_row=mysql_fetch_row(m_res)))//获取具体的数据
-	{
-		std::vector<std::string> datarows;
-		for(i=0;i<j;i++)
-		{
-			std::string filed(sql_row[i]);
-			datarows.push_back(filed);
-		}
-		result->push_back(datarows);
-	}
-
 	return true;
 }
 
-void CSCSMySqlHelper::CloseMySql()
+bool CSCSMySqlHelper::GetNextRow( std::vector<std::string> *dataRow )
 {
-	mysql_close(&mysql);
+	MYSQL_FIELD *fd;
+	int i;
+	dataRow->clear();
+
+	while((fd=mysql_fetch_field(m_res)))//获取列名
+	{
+		std::string column(fd->name);
+		dataRow->push_back(column);
+	}
+
+	if(dataRow.size()>0)
+	{
+		return true;
+	}
+
+	MYSQL_ROW sql_row;
+	int j=mysql_num_fields(m_res);
+
+	if((sql_row=mysql_fetch_row(m_res)))//获取具体的数据
+	{
+		for(i=0;i<j;i++)
+		{
+			std::string filed(sql_row[i]);
+			dataRow->push_back(filed);
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
