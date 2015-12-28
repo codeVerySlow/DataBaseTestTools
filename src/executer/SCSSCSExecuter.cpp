@@ -27,6 +27,7 @@ CSCSResultIter CSCSMySQLExecuter::ExecuteSQL( const std::string &sql )
 {
 	std::string msg;
 	scs.InitSelect(sql.c_str(),msg);
+	LOG_DEBUG(("SCSDB Execute sql:"+sql).c_str());
 	return CSCSResultIter(this);
 }
 

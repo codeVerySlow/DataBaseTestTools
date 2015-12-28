@@ -7,5 +7,5 @@ public:
 	~CSCSResultWriterWrapper();
 	bool Write(const CSCSReport &report);
 private:
-	boost::shared_ptr<CSCSResultWriter> resultWriter;
+	CSCSResultWriter* resultWriter;
 };

@@ -14,7 +14,7 @@ public:
 
 	bool GetNext(std::vector<std::string> &dataRow);
 private:
-	CSCSSCSHelper scs;
+	CSCSSCSHelper* scs;
 };
 
 #endif

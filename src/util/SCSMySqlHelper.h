@@ -17,6 +17,8 @@ public:
 private:
 	MYSQL mysql;
 	MYSQL_RES *m_res;
+	bool m_isSelect;
+	bool m_isFinish;
 	CSCSMySqlHelper(const CSCSMySqlHelper&);
 	void operator=(const CSCSMySqlHelper&);
 };

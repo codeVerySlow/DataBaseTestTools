@@ -2,7 +2,7 @@
 
 #include "SCSMySqlReader.h"
 #include "SCSPreparedSQLSet.h"
-#include "util/SCSConfigHelper.h"
+#include "../util/SCSConfigHelper.h"
 
 int main()
 {

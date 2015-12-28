@@ -7,11 +7,11 @@
 class CSCSReport
 {
 	public:
-		int nTotal;
-		int nPass;
-		bool isSuccess;
-		std::vector<std::string> vecFailData;
-		std::string strMessage;
+		int m_nTotal;
+		int m_nPass;
+		bool m_isSuccess;
+		std::vector<std::string> m_vecFailData;
+		std::string m_strMessage;
 };
 
 

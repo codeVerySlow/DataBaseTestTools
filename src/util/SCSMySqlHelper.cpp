@@ -49,10 +49,17 @@ bool CSCSMySqlHelper::InitSelect( const char *sql,std::string &msg )
 		return false;
 	}
 
-	if((m_res = mysql_store_result(&mysql))==NULL)
+	if(!(m_res = mysql_store_result(&mysql)))
 	{
-		msg="store result error";
-		return false;
+		if(mysql_field_count(&mysql) == 0)
+		{
+			m_isSelect=false;
+		}
+		else // mysql_store_result() should have returned data
+		{
+			msg="store result error";
+			return false;
+		}
 	}
 
 	return true;
@@ -64,13 +71,23 @@ bool CSCSMySqlHelper::GetNextRow( std::vector<std::string> *dataRow )
 	int i;
 	dataRow->clear();
 
+	if(!m_isSelect)
+	{
+		if(!m_isFinish)
+		{
+			dataRow->push_back(SCSUtilTools::NumberToString(mysql_affected_rows(&mysql)));
+			m_isFinish = true;
+			return true;
+		}
+	}
+
 	while((fd=mysql_fetch_field(m_res)))//获取列名
 	{
 		std::string column(fd->name);
 		dataRow->push_back(column);
 	}
 
-	if(dataRow.size()>0)
+	if(dataRow->size()>0)
 	{
 		return true;
 	}
@@ -87,8 +104,7 @@ bool CSCSMySqlHelper::GetNextRow( std::vector<std::string> *dataRow )
 		}
 		return true;
 	}
-	else
-	{
-		return false;
-	}
+	
+	mysql_free_result(m_res);
+	return false;
 }

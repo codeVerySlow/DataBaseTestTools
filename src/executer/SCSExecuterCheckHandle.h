@@ -3,7 +3,8 @@
 
 #include <vector>
 
-class CSCSReport
+class CSCSReport;
+
 class CSCSExecuterCheckHandle
 {
 private:

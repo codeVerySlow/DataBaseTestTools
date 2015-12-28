@@ -1,5 +1,5 @@
 #ifndef _INCLUDE_SCSRESULTITER_H_
-#define _INCLUDE_SCSRESULTITER_H_ value
+#define _INCLUDE_SCSRESULTITER_H_
 
 #include <vector>
 #include <string>

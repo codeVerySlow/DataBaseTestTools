@@ -3,6 +3,7 @@
 #include "SCSFileComparer.h"
 #include "util/SCSCrc32c.h"
 #include "util/SCSSortCache.h"
+#include "util/SCSUtilTools.h"
 
 class CSCSResultIter{
 	public:
@@ -26,7 +27,7 @@ std::vector<std::string> CSCSResultIter::GetNext()
 	int i;
 	for(i=0;i<50;i++)
 	{
-		m_vecCurrentData.push_back(crc32c::NumberToString(i+index));
+		m_vecCurrentData.push_back(SCSUtilTools::NumberToString(i+index));
 	}
 	index++;
 	return m_vecCurrentData;

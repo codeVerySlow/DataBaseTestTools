@@ -1,11 +1,11 @@
 #include "SCSMySQLExecuter.h"
-#include "SCSConfigHelper.h"
-#include "SCSMySqlHelper.h"
-#include "SCSUtilTools.h"
+#include "../util/SCSMySqlHelper.h"
+#include "../util/SCSUtilTools.h"
+#include "../util/SCSConfigHelper.h"
 
 bool CSCSMySQLExecuter::OpenDataSource()
 {	
-	STConfig *config=CSCSConfigHelper::GetInstance()->GetConfig();
+	const STConfig *config=CSCSConfigHelper::GetInstance()->GetConfig();
 	std::string msg;
 
 	if(!mysql.ConnMySql(config->conSrcMysqlConnect.strIP.c_str(),

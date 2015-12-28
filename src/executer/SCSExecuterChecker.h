@@ -1,5 +1,8 @@
+#ifndef _EXECUTER_SCSEXECUTERCHECKER_H_
+#define _EXECUTER_SCSEXECUTERCHECKER_H_
 #include <vector>
-#include "SCSReport.h"
+
+class CSCSReport;
 
 class ExecuterChecker
 {
@@ -9,3 +12,4 @@ public:
 	std::vector<CSCSReport> BeforeEachExecute();
 	std::vector<CSCSReport> AfterEachExecute();
 };
+#endif

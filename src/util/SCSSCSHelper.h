@@ -1,6 +1,7 @@
 #ifndef _UTIL_SCSSCSHELPER_H_
 #define _UTIL_SCSSCSHELPER_H_
-
+#include "scsdbclient.h"
+#include "scsdberror.h"
 
 class CSCSSCSHelper
 {
@@ -11,6 +12,11 @@ public:
 	bool InitSelect(const char *sql,std::string &msg);
 	bool GetNextRow(std::vector<std::string> *dataRow);
 	void CloseSCS();
+private:
+	SCSDB m_scsdb;
+	bool m_isReadColunm;
+	bool m_isReadAffect;
+	int m_nColNum;
 };
 
 #endif

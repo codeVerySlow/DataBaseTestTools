@@ -15,7 +15,7 @@ public:
 
 	virtual bool GetNext(std::vector<std::string> &dataRow)=0;
 
-	static boost::shared_ptr<CSCSExecuter> Create();
+	static CSCSExecuter* Create();
 };
 
 #endif

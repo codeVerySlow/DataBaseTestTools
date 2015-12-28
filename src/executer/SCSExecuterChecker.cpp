@@ -1,4 +1,5 @@
-#include "ExecuterChecker.h"
+#include <SCSReport.h>
+#include "SCSExecuterChecker.h"
 
 
 std::vector<CSCSReport> ExecuterChecker::BeforeCase()

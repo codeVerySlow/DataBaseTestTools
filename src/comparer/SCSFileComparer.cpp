@@ -1,10 +1,12 @@
 #include <fstream>
 #include <string>
 #include <assert.h>
+
 #include "SCSFileComparer.h"
 #include "SCSResultIter.h"
 #include "util/SCSSortCache.h"
 #include "util/SCSCrc32c.h"
+#include "SCSReport.h"
 
 CSCSFileComparer::CSCSFileComparer()
 {
@@ -80,9 +82,9 @@ bool CSCSFileComparer::CompareSequence(CSCSResultIter *iter1,CSCSResultIter *ite
 	}
 }
 
-boost::shared_ptr<const CSCSReport> CSCSFileComparer::GetReport() const
+const CSCSReport* CSCSFileComparer::GetReport() const
 {
-	return boost::shared_ptr<const CSCSReport>();
+	return new CSCSReport();
 }
 
 void CSCSFileComparer::WriteCRCToCache(CSCSResultIter *iter,CSCSSortCache &cache)
