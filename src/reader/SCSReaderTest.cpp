@@ -2,10 +2,13 @@
 
 #include "SCSMySqlReader.h"
 #include "SCSPreparedSQLSet.h"
-#include "../util/SCSConfigHelper.h"
+#include "util/SCSConfigHelper.h"
+#include "DBLog.h"
 
 int main()
 {
+    LOG_INIT_NORMAL("./", true);
+    SET_LOGLEVEL(__SLL_INFO);
 	assert(CSCSConfigHelper::GetInstance()->Read());
 
 	CSCSPreparedSQLSet set;
@@ -24,5 +27,5 @@ int main()
 			std::cout<<"srcSQL"<<pair.strSQLSource<<std::endl;
 			std::cout<<"desSQL"<<pair.strSQLDestination<<std::endl;
 		}
-	} 
+	}
 }

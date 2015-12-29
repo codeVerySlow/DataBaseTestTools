@@ -1,10 +1,10 @@
 OPT= -g
 
-CFLAG= -I../ -I../../include -I/usr/include/mysql  $(OPT)
+CFLAG= -I../ -I../../include -I/home/SCS/install/mysql/include -I/home/SCS/include -D__LINUX__ $(OPT)
 
 
 readertest:SCSReaderTest.o SCSMySqlReader.o SCSPreparedSQLSet.o ../util/SCSMySqlHelper.o ../util/SCSConfigHelper.o ../util/SCSUtilTools.o 
-	g++ -o readertest SCSReaderTest.o SCSMySqlReader.o SCSPreparedSQLSet.o ../util/SCSMySqlHelper.o ../util/SCSConfigHelper.o ../util/SCSUtilTools.o $(OPT) -L/usr/lib/x86_64-linux-gnu -lmysqlclient
+	g++ -o readertest SCSReaderTest.o SCSMySqlReader.o SCSPreparedSQLSet.o ../util/SCSMySqlHelper.o ../util/SCSConfigHelper.o ../util/SCSUtilTools.o $(OPT) -L/home/SCS/lib -L/home/SCS/install/mysql/lib/mysql -lmysqlclient -lscsdblog -llog4cplus -pthread -lrt
 SCSReaderTest.o:../../include/SCSPreparedSQLSet.h ../util/SCSConfigHelper.h
 	cc -c  $(CFLAG) SCSReaderTest.cpp
 SCSPreparedSQLSet.o:SCSPreparedSQLSet.cpp

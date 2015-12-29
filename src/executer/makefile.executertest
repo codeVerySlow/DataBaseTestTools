@@ -1,0 +1,6 @@
+OPT= -g -D__LINUX__
+
+CFLAG= -I/home/SCS/install/mysql/include -I../ -I../include -I/home/SCS/include $(OPT)
+
+SCSMySQLExecuter.o:
+	cc $(CFLAG) -c SCSMySQLExecuter.cpp

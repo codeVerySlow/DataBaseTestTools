@@ -1,4 +1,5 @@
 #include "SCSMySqlHelper.h"
+#include "util/SCSUtilTools.h"
 
 bool CSCSMySqlHelper::ConnMySql(const char *host,const int port,const char *user,const char *pwd,const char *db,const char *charset,std::string &msg)
 {
@@ -22,13 +23,13 @@ bool CSCSMySqlHelper::ConnMySql(const char *host,const int port,const char *user
 
 	return true;
 }
- 
+
 bool CSCSMySqlHelper::Select(const char *sql,std::vector<std::vector<std::string> > *result,std::string &msg)
 {
 	InitSelect(sql,msg);
-	
+
 	std::vector<std::string> vecDatarow;
-	while(GetNextRow(vecDatarow))
+	while(GetNextRow(&vecDatarow))
 	{
 		result->push_back(vecDatarow);
 	}
@@ -48,6 +49,9 @@ bool CSCSMySqlHelper::InitSelect( const char *sql,std::string &msg )
 		msg = "select query error";
 		return false;
 	}
+
+    m_isSelect=true;
+    m_isFinish=false;
 
 	if(!(m_res = mysql_store_result(&mysql)))
 	{
@@ -104,7 +108,7 @@ bool CSCSMySqlHelper::GetNextRow( std::vector<std::string> *dataRow )
 		}
 		return true;
 	}
-	
+
 	mysql_free_result(m_res);
 	return false;
 }

@@ -11,5 +11,5 @@ public:
 
 	bool GetNext(std::vector<std::string> &dataRow);
 private:
-	CSCSMySqlHelper mysql;
+	CSCSMySqlHelper *mysql;
 };
