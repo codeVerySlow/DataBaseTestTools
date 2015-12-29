@@ -3,18 +3,17 @@
 
 #include <vector>
 #include <string>
+#include <boost/shared_ptr.hpp>
 
-class Executer;
+class CSCSExecuter;
 
 class CSCSResultIter{
 public:
-	CSCSResultIter(Executer *executer);
+	CSCSResultIter(CSCSExecuter *executer);
 	~CSCSResultIter();
-	std::vector<std::string> GetNext();
-	std::vector<std::string> GetCurrent();
-	std::string GetCaseId();
+	bool GetNext(std::vector<std::string> &row);
 private:
-	std::vector<std::string> m_vecCurrentData;
+	boost::shared_ptr<CSCSExecuter> m_pExecuter;
 };
 
 #endif

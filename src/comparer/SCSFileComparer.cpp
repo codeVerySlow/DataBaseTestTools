@@ -43,16 +43,11 @@ bool CSCSFileComparer::Compare(CSCSResultIter *iter1,CSCSResultIter *iter2)
 
 bool CSCSFileComparer::CompareSequence(CSCSResultIter *iter1,CSCSResultIter *iter2)
 {
-	while(1)
+	std::vector<std::string> iter1Data;
+	std::vector<std::string> iter2Data;
+	while(iter1->GetNext(iter1Data)&&iter2->GetNext(iter2Data))
 	{
-		std::vector<std::string> iter1Data=iter1->GetNext();
-		std::vector<std::string> iter2Data=iter2->GetNext();
-
-		if(iter1Data.size()==0&&iter2Data.size()==0)
-		{
-			return true;
-		}
-		else if(iter1Data.size()!=iter2Data.size())
+	    if(iter1Data.size()!=iter2Data.size())
 		{
 			return false;
 		}
@@ -74,11 +69,6 @@ bool CSCSFileComparer::CompareSequence(CSCSResultIter *iter1,CSCSResultIter *ite
 				break;
 			}
 		}
-
-		if(iter1Data.size()!=iter2Data.size())
-		{
-			return false;
-		}
 	}
 }
 
@@ -89,14 +79,9 @@ const CSCSReport* CSCSFileComparer::GetReport() const
 
 void CSCSFileComparer::WriteCRCToCache(CSCSResultIter *iter,CSCSSortCache &cache)
 {
-	while(1)
+	std::vector<std::string> iterData;
+	while(iter->GetNext(iterData))
 	{
-		std::vector<std::string> iterData=iter->GetNext();
-
-		if(iterData.size()==0)
-		{
-			break;
-		}
 
 		std::vector<std::string>::iterator iterator=iterData.begin();
 		std::string combinStr;

@@ -1,6 +1,22 @@
 OPT= -g -D__LINUX__
 
-CFLAG= -I/home/SCS/install/mysql/include -I../ -I../include -I/home/SCS/include $(OPT)
+CFLAG= -I/home/SCS/install/mysql/include -I../ -I../../include -I/home/SCS/include $(OPT)
 
+executertest:SCSExecuter_test.o SCSExecuter.o SCSMySQLExecuter.o SCSSCSExecuter.o SCSMySqlHelper.o SCSSCSHelper.o SCSResultIter.o SCSConfigHelper.o
+	g++ -o executertest $(OPT) SCSExecuter_test.o SCSExecuter.o SCSMySQLExecuter.o SCSSCSExecuter.o SCSMySqlHelper.o SCSSCSHelper.o SCSResultIter.o SCSConfigHelper.o -L/home/SCS/lib -L/home/SCS/install/mysql/lib/mysql -lmysqlclient -lscsdbclient -lscsdblog -llog4cplus -pthread -lrt
 SCSMySQLExecuter.o:
 	cc $(CFLAG) -c SCSMySQLExecuter.cpp
+SCSSCSExecuter.o:
+	cc $(CFLAG) -c SCSSCSExecuter.cpp
+SCSMySqlHelper.o:
+	cc $(CFLAG) -c ../util/SCSMySqlHelper.cpp
+SCSSCSHelper.o:
+	cc $(CFLAG) -c ../util/SCSSCSHelper.cpp
+SCSExecuter_test.o:
+	cc $(CFLAG) -c SCSExecuter_test.cpp
+SCSResultIter.o:
+	cc $(CFLAG) -c SCSResultIter.cpp
+SCSExecuter.o:
+	cc $(CFLAG) -c SCSExecuter.cpp
+SCSConfigHelper.o:
+	cc $(CFLAG) -c ../util/SCSConfigHelper.cpp

@@ -1,13 +1,15 @@
 #include <string>
 #include <vector>
+#include <string.h>
 #include "scsdbclient.h"
 #include "scsdberror.h"
 
 #include "SCSSCSHelper.h"
+#include "SCSUtilTools.h"
 
 bool CSCSSCSHelper::ConnSCS( const char *host,const int port,const char *user,const char *pwd,const char *db,const char *charset,std::string &msg )
 {
-	//Á¬½ÓSCSDB
+	//ï¿½ï¿½ï¿½ï¿½SCSDB
 	if(NULL == (m_scsdb = scsdb_open(host,user,pwd,db)))
 	{
 		msg="connect scsdb fail!";
@@ -18,30 +20,30 @@ bool CSCSSCSHelper::ConnSCS( const char *host,const int port,const char *user,co
 
 bool CSCSSCSHelper::InitSelect( const char *sql,std::string &msg )
 {
-	//Ö´ÐÐSCSQL
+	//Ö´ï¿½ï¿½SCSQL
 	if(0 != scsdb_execute(m_scsdb,sql, strlen(sql)))
 	{
-		//Ö´ÐÐÊ§°Ü´òÓ¡´íÎóÐÅÏ¢
+		//Ö´ï¿½ï¿½Ê§ï¿½Ü´ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 		msg="execute SCSQL fail!"; 			
 		msg+=scsdb_error_code(m_scsdb);
 		msg+=scsdb_error_string(m_scsdb);
 
 		return false;
 	}
-	nColNum = scsdb_colum_num(m_scsdb);
+	m_nColNum = scsdb_colum_num(m_scsdb);
 	return true;
 }
 
 bool CSCSSCSHelper::GetNextRow( std::vector<std::string> *dataRow )
 {
 	dataRow->clear();
-	//½á¹û¼¯ÁÐÊý>0£¬ËµÃ÷±¾´ÎÖ´ÐÐµÄSCSQLÓï¾äÓÐ½á¹û¼¯·µ»Ø
-	//Èçshow¡¢selectµÈÃüÁî
-	if (nColNum > 0)
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½>0ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ðµï¿½SCSQLï¿½ï¿½ï¿½ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//ï¿½ï¿½showï¿½ï¿½selectï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	if (m_nColNum > 0)
 	{
 		if(!m_isReadColunm)
 		{
-			for (int i = 0; i < nColNum; i++)
+			for (int i = 0; i < m_nColNum; i++)
 			{
 				dataRow->push_back(scsdb_column_name(m_scsdb, i));
 			}
@@ -49,36 +51,36 @@ bool CSCSSCSHelper::GetNextRow( std::vector<std::string> *dataRow )
 			return true;
 		}
 
-		//Ñ­»·±éÀú´òÓ¡¸÷ÐÐ½á¹û
-		if (scsdb_read_row(scsdb) != __READ_ROW_END)
+		//Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½Ð½ï¿½ï¿½
+		if (scsdb_read_row(m_scsdb) != __READ_ROW_END)
 		{			
-			for (int i = 0; i < nColNum; i++)
+			for (int i = 0; i < m_nColNum; i++)
 			{
-				dataRow->push_back(scsdb_read_field(scsdb, i));
+				dataRow->push_back(scsdb_read_field(m_scsdb, i));
 			}
 			return true;
 		}
 	}
-	//Ã»ÓÐ½á¹û¼¯·µ»Ø£¬Èçinsert¡¢update¡¢deleteµÈ
-	//´ËÊ±£¬·µ»ØÊý¾Ý¿âÖÐÊÜÓ°ÏìµÄÐÐÊý£¬
-	//¼´³É¹¦²åÈë¡¢¸üÐÂ¡¢É¾³ýÁË¶àÉÙÐÐ
+	//Ã»ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø£ï¿½ï¿½ï¿½insertï¿½ï¿½updateï¿½ï¿½deleteï¿½ï¿½
+	//ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½ï¿½ë¡¢ï¿½ï¿½ï¿½Â¡ï¿½É¾ï¿½ï¿½ï¿½Ë¶ï¿½ï¿½ï¿½ï¿½ï¿½
 	else
 	{
 		if(!m_isReadAffect)
 		{
-			dataRow->push_back(scsdb_affected_rows(scsdb));
+			dataRow->push_back(SCSUtilTools::NumberToString<long long>(scsdb_affected_rows(m_scsdb)));
 			m_isReadAffect = true;
 			return true;
 		}
 	}
-
+	//ï¿½Í·Å½ï¿½ï¿½ï¿½ï¿½
+	scsdb_release(m_scsdb);
 	return false;
 }
 
 void CSCSSCSHelper::CloseSCS()
 {
-	//ÊÍ·Å½á¹û¼¯
-	scsdb_release(scsdb);
-	//¹Ø±ÕÁ¬½Ó
-	scsdb_close(scsdb);
+
+	//ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½
+	scsdb_close(m_scsdb);
 }
