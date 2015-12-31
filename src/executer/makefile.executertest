@@ -20,3 +20,5 @@ SCSExecuter.o:
 	cc $(CFLAG) -c SCSExecuter.cpp
 SCSConfigHelper.o:
 	cc $(CFLAG) -c ../util/SCSConfigHelper.cpp
+clean:
+	-rm -rf *.o executertest

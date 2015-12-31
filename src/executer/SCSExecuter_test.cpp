@@ -1,32 +1,35 @@
 #include <boost/shared_ptr.hpp>
+#include <DBLog.h>
 #include "SCSExecuter.h"
 #include "SCSResultIter.h"
 #include "util/SCSConfigHelper.h"
 #include "SCSSCSExecuter.h"
-#include "SCSMySQLExecuter.h"
 
 void printIterator(boost::shared_ptr<CSCSResultIter> resultIter);
 
 int main()
 {
-    //boost::shared_ptr<CSCSExecuter> scsExecuter(CSCSExecuter::Create(ExecuterType_SCS,&(CSCSConfigHelper::GetInstance()->GetConfig()->conDesConnect)));
-    //boost::shared_ptr<CSCSExecuter> mysqlExecuter(CSCSExecuter::Create(ExecuterType_MYSQL,&(CSCSConfigHelper::GetInstance()->GetConfig()->conSrcMysqlConnect)));
+    LOG_INIT_NORMAL("./", true);
+    SET_LOGLEVEL(__SLL_INFO);
+    assert(CSCSConfigHelper::GetInstance()->Read());
 
-    boost::shared_ptr<CSCSExecuter> scsExecuter(new CSCSSCSExecuter(&(CSCSConfigHelper::GetInstance()->GetConfig()->conDesConnect)));
-    boost::shared_ptr<CSCSExecuter> mysqlExecuter(new CSCSMySQLExecuter(&(CSCSConfigHelper::GetInstance()->GetConfig()->conSrcMysqlConnect)));
+    boost::shared_ptr<CSCSExecuter> srcExecuter(CSCSExecuter::Create(ExecuterType_SCS, &(CSCSConfigHelper::GetInstance()->GetConfig()->conDesConnect)));
+    boost::shared_ptr<CSCSExecuter> desExecuter(CSCSExecuter::Create(ExecuterType_MYSQL, &(CSCSConfigHelper::GetInstance()->GetConfig()->conSrcMysqlConnect)));
 
-    scsExecuter->OpenDataSource();
-    mysqlExecuter->OpenDataSource();
+    srcExecuter->OpenDataSource();
+    desExecuter->OpenDataSource();
 
-    boost::shared_ptr<CSCSResultIter> scsResultIter(scsExecuter->ExecuteSQL("select * from a"));
-    boost::shared_ptr<CSCSResultIter> mysqlResultIter(mysqlExecuter->ExecuteSQL("select * from a"));
+    boost::shared_ptr<CSCSResultIter> scsResultIter(srcExecuter->ExecuteSQL("select t.* from t(test)", <#initializer#>));
+    boost::shared_ptr<CSCSResultIter> mysqlResultIter(desExecuter->ExecuteSQL("select * from a", <#initializer#>));
 
     printIterator(scsResultIter);
     printIterator(mysqlResultIter);
 
-    scsExecuter->CloseDataSource();
-    mysqlExecuter->CloseDataSource();
+    srcExecuter->CloseDataSource();
+    desExecuter->CloseDataSource();
 
+    std::cout<<"ok"<<std::endl;
+    return 0;
 }
 
 void printIterator(boost::shared_ptr<CSCSResultIter> resultIter) {
@@ -36,7 +39,7 @@ void printIterator(boost::shared_ptr<CSCSResultIter> resultIter) {
         std::vector<std::string>::iterator iter=scsrows.begin();
         while (iter!=scsrows.end())
         {
-            std::cout << *iter << " ";
+            std::cout << *iter++ << " ";
         }
         std::cout << std::endl;
     }

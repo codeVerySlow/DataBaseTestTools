@@ -19,7 +19,7 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet &set)
 	std::string msg;
 
 	if(!mysql.ConnMySql(config->conCaseMysqlConnect.strIP.c_str(),
-					config->conCaseMysqlConnect.strPort,
+					config->conCaseMysqlConnect.nPort,
 					config->conCaseMysqlConnect.strUser.c_str(),
 					config->conCaseMysqlConnect.strPwd.c_str(),
 					config->conCaseMysqlConnect.strDataBase.c_str(),
@@ -63,12 +63,12 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet &set)
 	vector<string> vecDesCase;
 	GetTestCase("mysqlcases",testTable,vecDesCase);
 
-	bool checkSequence=testTable[1][GetColumnIndex("sequence_match",testTable[0])]=="1";
-	std::string  strModule=testTable[1][GetColumnIndex("modules",testTable[0])];
-	int nExecTimes=SCSUtilTools::StringToNumber<int>(testTable[1][GetColumnIndex("cases_execution_times",testTable[0])]);
-	bool checkDataNodes=testTable[1][GetColumnIndex("datanodes_check",testTable[0])]=="1";
-	bool init = testTable[1][GetColumnIndex("init",testTable[0])]=="1";
-	nTestCaseId=SCSUtilTools::StringToNumber<int>(testTable[1][GetColumnIndex("caseid",testTable[0])]);
+	bool checkSequence=testTable[1][SCSUtilTools::GetColumnIndex("sequence_match",testTable[0])]=="1";
+	std::string  strModule=testTable[1][SCSUtilTools::GetColumnIndex("modules",testTable[0])];
+	int nExecTimes=SCSUtilTools::StringToNumber<int>(testTable[1][SCSUtilTools::GetColumnIndex("cases_execution_times",testTable[0])]);
+	bool checkDataNodes=testTable[1][SCSUtilTools::GetColumnIndex("datanodes_check",testTable[0])]=="1";
+	bool init = testTable[1][SCSUtilTools::GetColumnIndex("init",testTable[0])]=="1";
+	nTestCaseId=SCSUtilTools::StringToNumber<int>(testTable[1][SCSUtilTools::GetColumnIndex("caseid",testTable[0])]);
 
 	set = CSCSPreparedSQLSet(vecSrcCase,vecDesCase,checkSequence,strModule,nExecTimes,checkDataNodes,init);
 
@@ -77,7 +77,7 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet &set)
 
 bool CSCSMySqlReader::GetTestCase( const std::string &column,const std::vector<std::vector<std::string> > &vecTestTable,std::vector<std::string> &vecTestCase )
 {
-	int scsdbcaseIndex=GetColumnIndex(column,vecTestTable[0]);
+	int scsdbcaseIndex=SCSUtilTools::GetColumnIndex(column,vecTestTable[0]);
 	if(scsdbcaseIndex==-1)
 	{
 		return false;
@@ -97,24 +97,5 @@ CSCSMySqlReader::~CSCSMySqlReader()
 
 }
 
-int CSCSMySqlReader::GetColumnIndex( const string &column,const vector<string> &vecTestColumn )
-{
-	vector<string>::const_iterator it = find(vecTestColumn.begin(),vecTestColumn.end(),column);
 
-	if(it == vecTestColumn.end())
-	{
-		std::cerr<<"read testcase srcMysql err:can't find column"+column<<std::endl;
-		return -1;
-	}
-
-	unsigned int scsdbcaseIndex = it - vecTestColumn.begin();
-
-	if(scsdbcaseIndex >= vecTestColumn.size())
-	{
-		std::cerr<<"read testcase srcMysql err:can't find column"+column<<std::endl;
-		return -1;
-	}
-
-	return scsdbcaseIndex;
-}
 

@@ -26,4 +26,7 @@ namespace SCSUtilTools{
 
 	extern std::string join(const std::vector<std::string> &vec,const std::string &delim);
 
+	extern int GetColumnIndex(const std::string &column,const std::vector<std::string> &vecTestCase);
+
+	extern int getProcIdByName(std::string procName);
 }

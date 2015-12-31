@@ -13,7 +13,7 @@ public:
 	~CSCSResultIter();
 	bool GetNext(std::vector<std::string> &row);
 private:
-	boost::shared_ptr<CSCSExecuter> m_pExecuter;
+	CSCSExecuter *m_pExecuter;
 };
 
 #endif

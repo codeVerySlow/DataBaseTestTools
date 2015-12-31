@@ -6,7 +6,7 @@
 bool CSCSMySQLExecuter::OpenDataSource() {
 	std::string msg;
 	if(!mysql->ConnMySql(m_pConnect->strIP.c_str(),
-				m_pConnect->strPort,
+				m_pConnect->nPort,
 				m_pConnect->strUser.c_str(),
 				m_pConnect->strPwd.c_str(),
 				m_pConnect->strDataBase.c_str(),
@@ -20,7 +20,7 @@ bool CSCSMySQLExecuter::OpenDataSource() {
 	return true;
 }
 
-boost::shared_ptr<CSCSResultIter> CSCSMySQLExecuter::ExecuteSQL(const std::string &sql )
+boost::shared_ptr<CSCSResultIter> CSCSMySQLExecuter::ExecuteSQL(const std::string &sql, std::string &msg)
 {
 	std::string msg;
 	mysql->InitSelect(sql.c_str(),msg);

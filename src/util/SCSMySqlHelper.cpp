@@ -83,9 +83,10 @@ bool CSCSMySqlHelper::GetNextRow( std::vector<std::string> *dataRow )
 			m_isFinish = true;
 			return true;
 		}
+		return false;
 	}
 
-	while((fd=mysql_fetch_field(m_res)))//»ñÈ¡ÁÐÃû
+	while((fd=mysql_fetch_field(m_res)))//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 	{
 		std::string column(fd->name);
 		dataRow->push_back(column);
@@ -99,7 +100,7 @@ bool CSCSMySqlHelper::GetNextRow( std::vector<std::string> *dataRow )
 	MYSQL_ROW sql_row;
 	int j=mysql_num_fields(m_res);
 
-	if((sql_row=mysql_fetch_row(m_res)))//»ñÈ¡¾ßÌåµÄÊý¾Ý
+	if((sql_row=mysql_fetch_row(m_res)))//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	{
 		for(i=0;i<j;i++)
 		{

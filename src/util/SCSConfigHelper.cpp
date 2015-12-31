@@ -59,25 +59,25 @@ bool CSCSConfigHelper::Read()
 	Config()->conSrcConnect.strIP=m["src_scsdb"]["hosts"];
 	Config()->conSrcConnect.strUser=m["src_scsdb"]["user"];
 	Config()->conSrcConnect.strDataBase=m["src_scsdb"]["db"];
-	Config()->conSrcConnect.strPort=SCSUtilTools::StringToNumber<int>(m["src_scsdb"]["port"]);
+	Config()->conSrcConnect.nPort =SCSUtilTools::StringToNumber<int>(m["src_scsdb"]["port"]);
 
 	Config()->conDesConnect.strPwd=m["dest_scsdb"]["pwd"];
 	Config()->conDesConnect.strIP=m["dest_scsdb"]["hosts"];
 	Config()->conDesConnect.strUser=m["dest_scsdb"]["user"];
 	Config()->conDesConnect.strDataBase=m["dest_scsdb"]["db"];
-	Config()->conDesConnect.strPort=SCSUtilTools::StringToNumber<int>(m["dest_scsdb"]["port"]);
+	Config()->conDesConnect.nPort =SCSUtilTools::StringToNumber<int>(m["dest_scsdb"]["port"]);
 
 	Config()->conSrcMysqlConnect.strPwd=m["src_mysql"]["pwd"];
 	Config()->conSrcMysqlConnect.strIP=m["src_mysql"]["host"];
 	Config()->conSrcMysqlConnect.strUser=m["src_mysql"]["user"];
 	Config()->conSrcMysqlConnect.strDataBase=m["src_mysql"]["db"];
-	Config()->conSrcMysqlConnect.strPort=SCSUtilTools::StringToNumber<int>(m["src_mysql"]["port"]);
+	Config()->conSrcMysqlConnect.nPort =SCSUtilTools::StringToNumber<int>(m["src_mysql"]["port"]);
 
 	Config()->conCaseMysqlConnect.strPwd=m["case_mysql"]["pwd"];
 	Config()->conCaseMysqlConnect.strIP=m["case_mysql"]["host"];
 	Config()->conCaseMysqlConnect.strUser=m["case_mysql"]["user"];
 	Config()->conCaseMysqlConnect.strDataBase=m["case_mysql"]["db"];
-	Config()->conCaseMysqlConnect.strPort=SCSUtilTools::StringToNumber<int>(m["case_mysql"]["port"]);
+	Config()->conCaseMysqlConnect.nPort =SCSUtilTools::StringToNumber<int>(m["case_mysql"]["port"]);
 
 
 	Config()->emModel=ConvertStringToEnum<EMModel>(m["mode"]["mode"].c_str());	

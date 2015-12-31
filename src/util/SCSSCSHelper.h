@@ -12,6 +12,7 @@ public:
 	bool InitSelect(const char *sql,std::string &msg);
 	bool GetNextRow(std::vector<std::string> *dataRow);
 	void CloseSCS();
+	bool IsConnect();
 private:
 	SCSDB m_scsdb;
 	bool m_isReadColunm;

@@ -56,7 +56,8 @@ bool CSCSSCSHelper::GetNextRow( std::vector<std::string> *dataRow )
 		{			
 			for (int i = 0; i < m_nColNum; i++)
 			{
-				dataRow->push_back(scsdb_read_field(m_scsdb, i));
+				const char *row=scsdb_read_field(m_scsdb, i);
+				dataRow->push_back(row==NULL?"NULL":row);
 			}
 			return true;
 		}
@@ -83,4 +84,8 @@ void CSCSSCSHelper::CloseSCS()
 
 	//�ر�����
 	scsdb_close(m_scsdb);
+}
+
+bool CSCSSCSHelper::IsConnect() {
+	return m_scsdb!=NULL;
 }

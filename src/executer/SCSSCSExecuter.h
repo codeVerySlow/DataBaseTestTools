@@ -3,6 +3,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <util/SCSConfigHelper.h>
+#include <util/SCSSCSHelper.h>
 #include "SCSExecuter.h"
 
 class CSCSSCSHelper;
@@ -11,9 +12,10 @@ struct STConnect;
 class CSCSSCSExecuter:public CSCSExecuter
 {
 public:
-	CSCSSCSExecuter(const STConnect *connect):m_pConnect(connect){};
+	CSCSSCSExecuter(const STConnect *connect):scs(new CSCSSCSHelper()),m_pConnect(connect){};
+	~CSCSSCSExecuter(){};
 	bool OpenDataSource();
-	boost::shared_ptr<CSCSResultIter> ExecuteSQL(const std::string &sql);
+	boost::shared_ptr<CSCSResultIter> ExecuteSQL(const std::string &sql, std::string &msg);
 	void CloseDataSource();
 
 	bool GetNext(std::vector<std::string> &dataRow);

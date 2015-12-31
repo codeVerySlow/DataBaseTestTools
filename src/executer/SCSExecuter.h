@@ -19,7 +19,7 @@ public:
 	CSCSExecuter(){};
 	virtual ~CSCSExecuter() {};
 	virtual bool OpenDataSource()=0;
-	virtual boost::shared_ptr<CSCSResultIter> ExecuteSQL(const std::string &sql)=0;
+	virtual boost::shared_ptr<CSCSResultIter> ExecuteSQL(const std::string &sql, std::string &msg) =0;
 	virtual void CloseDataSource()=0;
 
 	virtual bool GetNext(std::vector<std::string> &dataRow)=0;

@@ -8,20 +8,22 @@
 
 class CSCSPreparedSQLSet;
 
-class CSCSMySqlReader:public CSCSReader
-{
-	public:
-		CSCSMySqlReader();
-		~CSCSMySqlReader();
+class CSCSMySqlReader : public CSCSReader {
+public:
+    CSCSMySqlReader();
 
-		bool ReadNextTestCase(CSCSPreparedSQLSet &set);
-	private:
-		int nTestCaseId;
-		bool GetTestCase(const std::string &column,
-					const std::vector<std::vector<std::string> > &vecTestTable,
-					std::vector<std::string> &vecTestCase);
-		int GetColumnIndex(const std::string &column,
-					const std::vector<std::string> &vecTestCase);
+    ~CSCSMySqlReader();
+
+    bool ReadNextTestCase(CSCSPreparedSQLSet &set);
+
+private:
+    int nTestCaseId;
+
+    bool GetTestCase(const std::string &column,
+                     const std::vector<std::vector<std::string> > &vecTestTable,
+                     std::vector<std::string> &vecTestCase);
+
+
 };
 
 #endif

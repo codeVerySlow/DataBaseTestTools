@@ -30,7 +30,7 @@ enum EMModel
 struct STConnect
 {
 	std::string strIP;
-	int strPort;
+	int nPort;
 	std::string strUser;
 	std::string strPwd;
 	std::string strDataBase;
