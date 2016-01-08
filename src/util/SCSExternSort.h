@@ -1,41 +1,55 @@
-#ifndef EXTERN_SORT_H  
-#define EXTERN_SORT_H
+#ifndef _UTIL_SCSEXTERNSORT_H_
+#define _UTIL_SCSEXTERNSORT_H_
 /* 
-* ´óÊı¾İÁ¿µÄÅÅĞò 
-* ¶àÂ·¹é²¢ÅÅĞò 
-*/ 
+* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+* ï¿½ï¿½Â·ï¿½é²¢ï¿½ï¿½ï¿½ï¿½ 
+*/
 
 #include <stdio.h>
 
-#define MIN 0//ÕâÀï¿ªÊ¼µÄÊ±ºò³öÏÖÁËÒ»¸öBUG£¬Èç¹û¶¨ÒåµÄMIN´óÓÚµÈÓÚ´ıÅÅĞòµÄÊı£¬Ôò»áÊÇËã·¨³öÏÖ´íÎó
-#define MAX 0xFFFFFFFF//×î´óÖµ£¬¸½¼ÓÔÚ¹é²¢ÎÄ¼ş½áÎ²
-typedef unsigned int* LoserTree;
-typedef unsigned int* External;
+#define MIN 0//ï¿½ï¿½ï¿½ï¿ªÊ¼ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½BUGï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MINï¿½ï¿½ï¿½Úµï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½
+#define MAX 0xFFFFFFFF//ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¹é²¢ï¿½Ä¼ï¿½ï¿½ï¿½Î²
+typedef unsigned int *LoserTree;
+typedef unsigned int *External;
 
-class CSCSExternSort  
-{  
-public:  
-	void sort() ;
-	//input_file:ÊäÈëÎÄ¼şÃû  
-	//out_file:Êä³öÎÄ¼şÃû  
-	//count: Ã¿´ÎÔÚÄÚ´æÖĞÅÅĞòµÄÕûÊı¸öÊı  
-	CSCSExternSort(const char *input_file, const char * out_file, int count);
-	virtual ~CSCSExternSort();
-private:  
-	int m_count; //Êı×é³¤¶È  
-	char *m_in_file;   //ÊäÈëÎÄ¼şµÄÂ·¾¶  
-	char *m_out_file; //Êä³öÎÄ¼şµÄÂ·¾¶  
-	int k;//¹é²¢Êı£¬´ËÊı±ØĞëÒªÄÚÅÅĞòÖ®ºó²ÅÄÜµÃµ½£¬ËùÒÔÏÂÃæµÄlsºÍb¶¼Ö»ÄÜ¶¨ÒåÎªÖ¸Õë(×¢ÒâºÍÊéÉÏÇø±ğ)
-	LoserTree ls;//¶¨Òå³ÉÎªÖ¸Õë£¬Ö®ºó¶¯Ì¬Éú³ÉÊı×é
-	External b;//¶¨Òå³ÉÎªÖ¸Õë£¬ÔÚ³ÉÔ±º¯ÊıÖĞ¿ÉÒÔ°ÑËüµ±³ÉÊı×éÊ¹ÓÃ
-	int read_data(FILE* f, unsigned int a[], int n); 
-	void write_data(FILE* f, unsigned int a[], int n) ; 
-	char* temp_filename(int index); 
-	static int cmp_int(const void *a, const void *b);  
-	int memory_sort();
-	void Adjust(int s);
-	void CreateLoserTree();
-	void K_Merge();
-};  
+class CSCSExternSort
+{
+public:
+    void sort();
+
+    //input_file:ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
+    //out_file:ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
+    //count: Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    CSCSExternSort(const char *input_file, const char *out_file, int count);
+
+    virtual ~CSCSExternSort();
+
+private:
+    int m_count; //ï¿½ï¿½ï¿½é³¤ï¿½ï¿½
+    char *m_in_file;   //ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Â·ï¿½ï¿½
+    char *m_out_file; //ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Â·ï¿½ï¿½
+    int k;
+    //ï¿½é²¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ÜµÃµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½lsï¿½ï¿½bï¿½ï¿½Ö»ï¿½Ü¶ï¿½ï¿½ï¿½ÎªÖ¸ï¿½ï¿½(×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+    LoserTree ls;
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ÎªÖ¸ï¿½ë£¬Ö®ï¿½ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    External b;
+
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ÎªÖ¸ï¿½ë£¬ï¿½Ú³ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¿ï¿½ï¿½Ô°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½
+    int read_data(FILE *f, unsigned int a[], int n);
+
+    void write_data(FILE *f, unsigned int a[], int n);
+
+    char *temp_filename(int index);
+
+    static int cmp_int(const void *a, const void *b);
+
+    int memory_sort();
+
+    void Adjust(int s);
+
+    void CreateLoserTree();
+
+    void K_Merge();
+};
 
 #endif  

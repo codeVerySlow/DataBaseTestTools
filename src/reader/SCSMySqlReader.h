@@ -3,12 +3,15 @@
 
 #include <vector>
 #include <string>
+#include <boost/shared_ptr.hpp>
 
 #include "SCSReader.h"
 
 class CSCSPreparedSQLSet;
+class CSCSMySqlHelper;
 
-class CSCSMySqlReader : public CSCSReader {
+class CSCSMySqlReader : public CSCSReader
+{
 public:
     CSCSMySqlReader();
 
@@ -18,7 +21,7 @@ public:
 
 private:
     int nTestCaseId;
-
+    boost::shared_ptr<CSCSMySqlHelper> mysql;
     bool GetTestCase(const std::string &column,
                      const std::vector<std::vector<std::string> > &vecTestTable,
                      std::vector<std::string> &vecTestCase);

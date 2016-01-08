@@ -11,11 +11,13 @@
 struct STNode
 {
 
-    STNode() { };
+    STNode()
+    { };
 
 
     STNode(const std::string &IP, const std::string &Port, const std::string &TableName, const std::string &Count) : IP(
-            IP), Port(Port), TableName(TableName), Count(Count) { };
+            IP), Port(Port), TableName(TableName), Count(Count)
+    { };
 
     std::string IP;
     std::string Port;
@@ -23,18 +25,22 @@ struct STNode
     std::string Count;
 };
 
-class CSCSDataNodeReport: public CSCSReport
+class CSCSDataNodeReport : public CSCSReport
 {
 public:
-    CSCSDataNodeReport() : CSCSReport() { };
+    CSCSDataNodeReport() : CSCSReport()
+    { };
 
-    CSCSDataNodeReport(const std::vector<STNode> &m_vecNodeCount) : m_vecNodeCount(m_vecNodeCount) { }
+    CSCSDataNodeReport(const std::vector<STNode> &m_vecNodeCount) : m_vecNodeCount(m_vecNodeCount)
+    { }
 
-    const std::vector<STNode> &getNodeCount() const {
+    const std::vector<STNode> &getNodeCount() const
+    {
         return m_vecNodeCount;
     }
 
-    void setNodeCount(const std::vector<STNode> &nodeCount) {
+    void setNodeCount(const std::vector<STNode> &nodeCount)
+    {
         CSCSDataNodeReport::m_vecNodeCount = nodeCount;
     }
 

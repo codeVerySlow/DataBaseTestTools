@@ -3,9 +3,10 @@
 
 void CSCSExecuterCheckHandle::SetNextHandle(boost::shared_ptr<CSCSExecuterCheckHandle> handle)
 {
-    this->nextHandle=handle;
+    this->nextHandle = handle;
 }
 
-boost::shared_ptr<CSCSExecuterCheckHandle> CSCSExecuterCheckHandle::GetNextHandle() {
+boost::shared_ptr<CSCSExecuterCheckHandle> CSCSExecuterCheckHandle::GetNextHandle()
+{
     return this->nextHandle;
 }

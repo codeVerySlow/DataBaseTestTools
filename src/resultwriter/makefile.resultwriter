@@ -1,0 +1,20 @@
+OPT= -g -D__LINUX__
+
+CFLAG= -I/home/SCS/install/mysql/include -I../ -I../../include -I/home/SCS/include $(OPT)
+
+resultwritertest:writertest.o SCSResultWriter.o SCSDataNodeCheckResultWriter.o SCSSlaveCheckResultWriter.o SCSTestResultWriter.o SCSUtilTools.o SCSConfigHelper.o
+	g++ -o resultwritertest writertest.o SCSResultWriter.o SCSDataNodeCheckResultWriter.o SCSSlaveCheckResultWriter.o SCSTestResultWriter.o SCSUtilTools.o SCSConfigHelper.o -L/home/SCS/lib -L/home/SCS/install/mysql/lib/mysql -lmysqlclient -lscsdbclient -lscsdblog -llog4cplus -pthread -lrt
+SCSResultWriter.o:SCSResultWriter.cpp
+	cc -c SCSResultWriter.cpp $(CFLAG)
+SCSDataNodeCheckResultWriter.o:SCSDataNodeCheckResultWriter.cpp
+	cc -c SCSDataNodeCheckResultWriter.cpp $(CFLAG)
+SCSSlaveCheckResultWriter.o:SCSSlaveCheckResultWriter.cpp
+	cc -c SCSSlaveCheckResultWriter.cpp $(CFLAG)
+SCSTestResultWriter.o:SCSTestResultWriter.cpp
+	cc -c SCSTestResultWriter.cpp $(CFLAG)
+writertest.o:writertest.cpp
+	cc -c writertest.cpp $(CFLAG)
+SCSUtilTools.o:../util/SCSUtilTools.cpp
+	cc -c ../util/SCSUtilTools.cpp $(CFLAG)
+SCSConfigHelper.o:
+	cc $(CFLAG) -c ../util/SCSConfigHelper.cpp

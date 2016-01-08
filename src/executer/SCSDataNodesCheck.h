@@ -1,28 +1,27 @@
-//
-// Created by Administrator on 2015/12/31.
-//
-
 #ifndef _EXECUTER_SCSDATANODESCHECK_H
 #define _EXECUTER_SCSDATANODESCHECK_H
 
 
-#include <util/SCSSCSHelper.h>
+#include "util/SCSSCSHelper.h"
 #include "SCSExecuterCheckHandle.h"
 
-class CSCSDataNodesCheck: public CSCSExecuterCheckHandle
+class CSCSDataNodesCheck : public CSCSExecuterCheckHandle
 {
 public:
 
-    CSCSDataNodesCheck():m_pSCSHelper(new CSCSSCSHelper()) { };
+    CSCSDataNodesCheck() : m_pSCSHelper(new CSCSSCSHelper())
+    { };
 
-    ~CSCSDataNodesCheck() { };
+    ~CSCSDataNodesCheck()
+    { };
 
-    bool Check(std::vector<CSCSReport> &reports);
+    bool Check(const CSCSPreparedSQLSet &set, std::vector<boost::shared_ptr<const CSCSReport> > &reports);
 
 private:
-    bool Error(const std::string &msg, std::vector<CSCSReport> &reports);
+    bool Error(const std::string &msg, std::vector<boost::shared_ptr<const CSCSReport> > &reports);
+
     boost::shared_ptr<CSCSSCSHelper> m_pSCSHelper;
 };
 
 
-#endif //PROGRAM_SCSDATANODESCHECK_H
+#endif

@@ -1,20 +1,38 @@
+#ifndef _INCLUDE_SCSEXECUTERWRAPPER_H_
+#define _INCLUDE_SCSEXECUTERWRAPPER_H_
+
 #include <string>
+#include <vector>
+#include <boost/shared_ptr.hpp>
 
 class CSCSExecuter;
+
+class STSQLPair;
+
 class CSCSResultIter;
+
+class CSCSReport;
+class CSCSExecuterChecker;
+class CSCSPreparedSQLSet;
 
 class CSCSExecuterWrapper
 {
-public:	
-	CSCSExecuterWrapper();
-	~CSCSExecuterWrapper();
-	bool OpenDataSource(const std::string &user,
-						const std::string &password,
-						const std::string &ip,
-						const std::string &port,
-						const std::string &database);
-	CSCSResultIter* ExecuteSQL(const std::string &sql);	
-	void CloseDatasource();	
+public:
+    CSCSExecuterWrapper();
+
+    ~CSCSExecuterWrapper();
+
+    bool BeforeTestCaseCheck(const CSCSPreparedSQLSet &set,std::vector<boost::shared_ptr<const CSCSReport> > &reports);
+    bool AfterTestCaseCheck(const CSCSPreparedSQLSet &set,std::vector<boost::shared_ptr<const CSCSReport> > &reports);
+
+    bool ExecuteSQL(const CSCSPreparedSQLSet &set,const STSQLPair &stsqlPair, boost::shared_ptr<CSCSResultIter> &srcIter,
+                    boost::shared_ptr<CSCSResultIter> &desIter,
+                    std::vector<boost::shared_ptr<const CSCSReport> > &reports, std::string &msg);
+
 private:
-	CSCSExecuter* excuter;
+    boost::shared_ptr<CSCSExecuter> srcExcuter;
+    boost::shared_ptr<CSCSExecuter> desExcuter;
+    boost::shared_ptr<CSCSExecuterChecker> checker;
 };
+
+#endif

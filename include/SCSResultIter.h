@@ -7,13 +7,15 @@
 
 class CSCSExecuter;
 
-class CSCSResultIter{
+class CSCSResultIter
+{
 public:
-	CSCSResultIter(CSCSExecuter *executer);
-	~CSCSResultIter();
-	bool GetNext(std::vector<std::string> &row);
+    CSCSResultIter(CSCSExecuter *executer);
+    ~CSCSResultIter();
+
+    bool GetNext(std::vector<std::string> &row);
 private:
-	CSCSExecuter *m_pExecuter;
+    CSCSExecuter *m_pExecuter;
 };
 
 #endif

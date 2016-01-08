@@ -1,7 +1,7 @@
 #include <ctime>  
 #include <fstream>  
 #include <cassert> 
-#include <iostream>  
+#include <iostream>
 
 #include <stdlib.h>
 #include <string.h>
@@ -12,171 +12,176 @@
 using namespace std;
 
 void CSCSExternSort::sort()
-{  
-	time_t start = time(NULL);  
+{
+    clock_t t = clock();
 
-	//½«ÎÄ¼þÄÚÈÝ·Ö¿éÔÚÄÚ´æÖÐÅÅÐò£¬²¢·Ö±ðÐ´ÈëÁÙÊ±ÎÄ¼þ  
-	k = memory_sort();  //
+    //ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ý·Ö¿ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ò£¬²ï¿½ï¿½Ö±ï¿½Ð´ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Ä¼ï¿½
+    k = memory_sort();  //
 
-	//¹é²¢ÁÙÊ±ÎÄ¼þÄÚÈÝµ½Êä³öÎÄ¼þ  
-	//merge_sort(file_count); 
-	ls=new unsigned int[k];
-	b=new unsigned int[k+1];
-	K_Merge();
-	delete []ls;
-	delete []b;
-
-	time_t end = time(NULL);  
-	printf("total time:%f\n", (end - start) * 1000.0/ CLOCKS_PER_SEC);  
-}  
-
-CSCSExternSort::CSCSExternSort(const char *input_file, const char * out_file, int count)
-{  
-	m_count = count;  
-	m_in_file = new char[strlen(input_file) + 1];  
-	strcpy(m_in_file, input_file);  
-	m_out_file = new char[strlen(out_file) + 1];  
-	strcpy(m_out_file, out_file);  
-}  
-
-CSCSExternSort::~CSCSExternSort()
-{  
-	delete [] m_in_file;  
-	delete [] m_out_file;  
-} 
-
-int CSCSExternSort::read_data(FILE* f, unsigned int a[], int n)
-{  
-	int i = 0;   
-	while(i < n && (fscanf(f, "%u", &a[i]) != EOF)) i++;  
-	//printf("read:%d integer\n", i);  
-	return i;  
+    //ï¿½é²¢ï¿½ï¿½Ê±ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
+    //merge_sort(file_count);
+    ls = new unsigned int[k];
+    b = new unsigned int[k + 1];
+    K_Merge();
+    delete[]ls;
+    delete[]b;
+    t=clock()-t;
+    printf("total click:%ld (%f seconds)\n", t,((float)t)/CLOCKS_PER_SEC);
 }
 
-void CSCSExternSort::write_data( FILE* f, unsigned int a[], int n )
-{  
-	for(int i = 0; i < n; ++i)  
-		fprintf(f, "%u ", a[i]);  
-	fprintf(f,"%u",MAX);//ÔÚ×îºóÐ´ÉÏÒ»¸ö×î´óÖµ
-} 
+CSCSExternSort::CSCSExternSort(const char *input_file, const char *out_file, int count)
+{
+    m_count = count;
+    m_in_file = new char[strlen(input_file) + 1];
+    strcpy(m_in_file, input_file);
+    m_out_file = new char[strlen(out_file) + 1];
+    strcpy(m_out_file, out_file);
+}
 
-char* CSCSExternSort::temp_filename( int index )
-{  
-	char *tempfile = new char[100];  
-	sprintf(tempfile, "temp%d", index);  
-	return tempfile;  
-} 
+CSCSExternSort::~CSCSExternSort()
+{
+    delete[] m_in_file;
+    delete[] m_out_file;
+}
 
-int CSCSExternSort::cmp_int( const void *a, const void *b )
-{  
-	if(*(unsigned int*)a > *(unsigned int*)b)
-	{
-		return 1;
-	}
-	else if(*(unsigned int*)a == *(unsigned int*)b)
-	{
-		return 0;
-	}
-	else
-	{
-		return -1;
-	}
-} 
+int CSCSExternSort::read_data(FILE *f, unsigned int a[], int n)
+{
+    int i = 0;
+    while (i < n && (fscanf(f, "%u", &a[i]) != EOF))
+    { i++; }
+    //printf("read:%d integer\n", i);
+    return i;
+}
+
+void CSCSExternSort::write_data(FILE *f, unsigned int a[], int n)
+{
+    for (int i = 0; i < n; ++i)
+    {
+        fprintf(f, "%u ", a[i]);
+    }
+    fprintf(f, "%u", MAX);//ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+}
+
+char *CSCSExternSort::temp_filename(int index)
+{
+    char *tempfile = new char[100];
+    sprintf(tempfile, "temp%d", index);
+    return tempfile;
+}
+
+int CSCSExternSort::cmp_int(const void *a, const void *b)
+{
+    if (*(unsigned int *) a > *(unsigned int *) b)
+    {
+        return 1;
+    }
+    else if (*(unsigned int *) a == *(unsigned int *) b)
+    {
+        return 0;
+    }
+    else
+    {
+        return -1;
+    }
+}
 
 int CSCSExternSort::memory_sort()
-{  
-	FILE* fin = fopen(m_in_file, "rt");  
-	int n = 0, file_count = 0;  
-	unsigned int *array = new unsigned int[m_count];  
+{
+    FILE *fin = fopen(m_in_file, "rt");
+    int n = 0, file_count = 0;
+    unsigned int *array = new unsigned int[m_count];
 
-	//Ã¿¶ÁÈëm_count¸öÕûÊý¾ÍÔÚÄÚ´æÖÐ×öÒ»´ÎÅÅÐò£¬²¢Ð´ÈëÁÙÊ±ÎÄ¼þ  
-	while(( n = read_data(fin, array, m_count)) > 0)  
-	{  
-		qsort(array, n, sizeof(unsigned int), cmp_int);     
-		//ÕâÀï£¬µ÷ÓÃÁË¿âº¯Êý°¢£¬ÔÚµÚËÄ½ÚµÄcÊµÏÖÀï£¬²»ÔÙµ÷ÓÃqsort¡£  
-		char *fileName = temp_filename(file_count++);  
-		FILE *tempFile = fopen(fileName, "w");  
-		free(fileName);  
-		write_data(tempFile, array, n);  
-		fclose(tempFile);  
-	}  
+    //Ã¿ï¿½ï¿½ï¿½ï¿½m_countï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ò£¬²ï¿½Ð´ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Ä¼ï¿½
+    while ((n = read_data(fin, array, m_count)) > 0)
+    {
+        qsort(array, n, sizeof(unsigned int), cmp_int);
+        //ï¿½ï¿½ï¿½ï£¬ï¿½ï¿½ï¿½ï¿½ï¿½Ë¿âº¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½Ä½Úµï¿½cÊµï¿½ï¿½ï¿½ï£¬ï¿½ï¿½ï¿½Ùµï¿½ï¿½ï¿½qsortï¿½ï¿½
+        char *fileName = temp_filename(file_count++);
+        FILE *tempFile = fopen(fileName, "w");
+        free(fileName);
+        write_data(tempFile, array, n);
+        fclose(tempFile);
+    }
 
-	delete [] array;  
-	fclose(fin);  
+    delete[] array;
+    fclose(fin);
 
-	return file_count;  
-} 
+    return file_count;
+}
 
-void CSCSExternSort::Adjust( int s )
-{//ÑØ´ÓÒ¶×Ó½Úµãb[s]µ½¸ù½Úµãls[0]µÄÂ·¾¶µ÷Õû°ÜÕßÊ÷
-	int t=(s+k)/2;//ls[t]ÊÇb[s]µÄË«Ç×½Úµã
-	while(t>0)
-	{
-		if(b[s]>b[ls[t]])//Èç¹ûÊ§°Ü£¬ÔòÊ§°ÜÕßÎ»ÖÃsÁôÏÂ£¬sÖ¸ÏòÐÂµÄÊ¤ÀûÕß
-		{
-			int tmp=s;
-			s=ls[t];
-			ls[t]=tmp;
-		}
-		t=t/2;
-	}
-	ls[0]=s;//ls[0]´æ·Åµ÷ÕûºóµÄ×î´óÖµµÄÎ»ÖÃ
+void CSCSExternSort::Adjust(int s)
+{//ï¿½Ø´ï¿½Ò¶ï¿½Ó½Úµï¿½b[s]ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ls[0]ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    int t = (s + k) / 2;//ls[t]ï¿½ï¿½b[s]ï¿½ï¿½Ë«ï¿½×½Úµï¿½
+    while (t > 0)
+    {
+        if (b[s] > b[ls[t]])//ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½ï¿½ï¿½Ê§ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½sï¿½ï¿½ï¿½Â£ï¿½sÖ¸ï¿½ï¿½ï¿½Âµï¿½Ê¤ï¿½ï¿½ï¿½ï¿½
+        {
+            int tmp = s;
+            s = ls[t];
+            ls[t] = tmp;
+        }
+        t = t / 2;
+    }
+    ls[0] = s;//ls[0]ï¿½ï¿½Åµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½Î»ï¿½ï¿½
 }
 
 void CSCSExternSort::CreateLoserTree()
 {
-	b[k]=MIN;//¶îÍâµÄ´æ´¢Ò»¸ö×îÐ¡Öµ
-	int i;
-	for(i=0;i<k;i++)ls[i]=k;//ÏÈ³õÊ¼»¯ÎªÖ¸Ïò×îÐ¡Öµ£¬ÕâÑùºóÃæµÄµ÷Õû²ÅÊÇÕýÈ·µÄ
-	//ÕâÑùÄÜ±£Ö¤·ÇÒ¶×Ó½Úµã¶¼ÊÇ×ÓÊ÷ÖÐµÄ¡°¶þ°ÑÊÖ¡±
-	for(i=k-1;i>=0;i--)
-		Adjust(i);//ÒÀ´Î´Ób[k-1],b[k-2]...b[0]³ö·¢µ÷Õû°ÜÕßÊ÷
+    b[k] = MIN;//ï¿½ï¿½ï¿½ï¿½Ä´æ´¢Ò»ï¿½ï¿½ï¿½ï¿½Ð¡Öµ
+    int i;
+    for (i = 0; i < k; i++)
+    { ls[i] = k; }//ï¿½È³ï¿½Ê¼ï¿½ï¿½ÎªÖ¸ï¿½ï¿½ï¿½ï¿½Ð¡Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
+    //ï¿½ï¿½ï¿½ï¿½ï¿½Ü±ï¿½Ö¤ï¿½ï¿½Ò¶ï¿½Ó½Úµã¶¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ï¿½
+    for (i = k - 1; i >= 0; i--)
+    {
+        Adjust(i);
+    }//ï¿½ï¿½ï¿½Î´ï¿½b[k-1],b[k-2]...b[0]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 
 void CSCSExternSort::K_Merge()
-{//ÀûÓÃ°ÜÕßÊý°Ñk¸öÊäÈë¹é²¢¶Î¹é²¢µ½Êä³ö¶ÎÖÐ
-	//bÖÐÇ°k¸ö±äÁ¿´æ·Åk¸öÊäÈë¶ÎÖÐµ±Ç°¼ÇÂ¼µÄÔªËØ
-	//¹é²¢ÁÙÊ±ÎÄ¼þ  
-	FILE *fout = fopen(m_out_file, "wt");  
-	FILE* *farray = new FILE*[k];  
-	int i;  
-	for(i = 0; i < k; ++i)  //´ò¿ªËùÓÐkÂ·ÊäÈëÎÄ¼þ
-	{  
-		char* fileName = temp_filename(i);  
-		farray[i] = fopen(fileName, "rt");  
-		free(fileName);  
-	}  
+{//ï¿½ï¿½ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é²¢ï¿½Î¹é²¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    //bï¿½ï¿½Ç°kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ç°ï¿½ï¿½Â¼ï¿½ï¿½Ôªï¿½ï¿½
+    //ï¿½é²¢ï¿½ï¿½Ê±ï¿½Ä¼ï¿½
+    FILE *fout = fopen(m_out_file, "wt");
+    FILE **farray = new FILE *[k];
+    int i;
+    for (i = 0; i < k; ++i)  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½kÂ·ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
+    {
+        char *fileName = temp_filename(i);
+        farray[i] = fopen(fileName, "rt");
+        free(fileName);
+    }
 
-	for(i = 0; i < k; ++i)  //³õÊ¼¶ÁÈ¡
-	{  
-		if(fscanf(farray[i], "%u", &b[i]) == EOF)//¶ÁÃ¿¸öÎÄ¼þµÄµÚÒ»¸öÊýµ½dataÊý×é  
-		{
-			//printf("there is no %d file to merge!",k);
-			return;
-		}
-	}  
-	//    for(int i=0;i<k;i++)input(b[i]);
+    for (i = 0; i < k; ++i)  //ï¿½ï¿½Ê¼ï¿½ï¿½È¡
+    {
+        if (fscanf(farray[i], "%u", &b[i]) == EOF)//ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Äµï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½dataï¿½ï¿½ï¿½ï¿½
+        {
+            //printf("there is no %d file to merge!",k);
+            return;
+        }
+    }
+    //    for(int i=0;i<k;i++)input(b[i]);
 
-	CreateLoserTree();
-	int q;
-	while(b[ls[0]]!=MAX)//
-	{
-		q=ls[0];//qÓÃÀ´´æ´¢bÖÐ×îÐ¡ÖµµÄÎ»ÖÃ£¬Í¬Ê±Ò²¶ÔÓ¦Ò»Â·ÎÄ¼þ
-		//output(q);
-		fprintf(fout,"%u ",b[q]);
-		//input(b[q],q);
-		fscanf(farray[q],"%u",&b[q]);
-		Adjust(q);
-	}
-	//output(ls[0]);
-	fprintf(fout,"%u ",b[ls[0]]);
-	//delete [] hasNext;  
-	//delete [] data;  
+    CreateLoserTree();
+    int q;
+    while (b[ls[0]] != MAX)//
+    {
+        q = ls[0];//qï¿½ï¿½ï¿½ï¿½ï¿½æ´¢bï¿½ï¿½ï¿½ï¿½Ð¡Öµï¿½ï¿½Î»ï¿½Ã£ï¿½Í¬Ê±Ò²ï¿½ï¿½Ó¦Ò»Â·ï¿½Ä¼ï¿½
+        //output(q);
+        fprintf(fout, "%u ", b[q]);
+        //input(b[q],q);
+        fscanf(farray[q], "%u", &b[q]);
+        Adjust(q);
+    }
+    //output(ls[0]);
+    fprintf(fout, "%u ", b[ls[0]]);
+    //delete [] hasNext;
+    //delete [] data;
 
-	for(i = 0; i < k; ++i)  //ÇåÀí¹¤×÷
-	{  
-		fclose(farray[i]);  
-	}  
-	delete [] farray;  
-	fclose(fout);  
+    for (i = 0; i < k; ++i)  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    {
+        fclose(farray[i]);
+    }
+    delete[] farray;
+    fclose(fout);
 }

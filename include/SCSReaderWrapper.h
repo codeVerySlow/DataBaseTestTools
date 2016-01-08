@@ -1,17 +1,23 @@
 #ifndef _INCLUDE_SCSREADERWRAPPER_H_
 #define _INCLUDE_SCSREADERWRAPPER_H_
+
 #include <string>
+#include <boost/shared_ptr.hpp>
 
 class CSCSReader;
 class CSCSPreparedSQLSet;
 
-class CSCSReaderWrapper{
+class CSCSReaderWrapper
+{
 public:
-	CSCSReaderWrapper();
-	~CSCSReaderWrapper();
-	CSCSPreparedSQLSet* ReadNextTestCase();
+    CSCSReaderWrapper();
+
+    ~CSCSReaderWrapper();
+
+    bool ReadNextTestCase(CSCSPreparedSQLSet &set);
+
 private:
-	CSCSReader* reader;
+    boost::shared_ptr<CSCSReader> reader;
 };
 
 #endif
