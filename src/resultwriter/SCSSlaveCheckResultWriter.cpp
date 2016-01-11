@@ -1,3 +1,4 @@
+#include <dirent.h>
 #include "util/SCSUtilTools.h"
 #include "executer/SCSSlaveCheckReport.h"
 #include "SCSSlaveCheckResultWriter.h"
@@ -19,6 +20,10 @@ bool CSCSSlaveCheckResultWriter::Write(boost::shared_ptr<const CSCSReport> repor
     strftime(filename, 80, "slavestatus_%Y%m%d.report", timeinfo);
 
     std::string filePath = "./report/";
+    if (!opendir(filePath.c_str()))
+    {
+        mkdir(filePath.c_str());
+    }
     filePath += filename;
     std::fstream fs(filePath.c_str(), std::ios::out | std::ios::app);
     if (!fs)

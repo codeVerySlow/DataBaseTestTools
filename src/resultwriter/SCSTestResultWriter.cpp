@@ -24,7 +24,7 @@ bool CSCSTestResultWriter::Write(boost::shared_ptr<const CSCSReport> report)
 
     if (!opendir(filePath.c_str()))
     {
-        //mkdir(filePath.c_str(),null);
+        mkdir(filePath.c_str());
     }
     filePath += filename;
     std::fstream fs(filePath.c_str(), std::ios::out | std::ios::app);

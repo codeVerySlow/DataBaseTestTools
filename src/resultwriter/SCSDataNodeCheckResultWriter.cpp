@@ -1,4 +1,5 @@
 #include <fstream>
+#include <dirent.h>
 #include "DBLog.h"
 #include "SCSDataNodeCheckResultWriter.h"
 #include "SCSReport.h"
@@ -22,6 +23,10 @@ bool CSCSDataNodeCheckResultWriter::Write(boost::shared_ptr<const CSCSReport> re
     strftime(filename, 80, "DataNodesQuantity_%Y%m%d.report", timeinfo);
 
     std::string filePath = "./report/";
+    if (!opendir(filePath.c_str()))
+    {
+        mkdir(filePath.c_str());
+    }
     filePath += filename;
     std::fstream fs(filePath.c_str(), std::ios::out | std::ios::app);
     if (!fs)
