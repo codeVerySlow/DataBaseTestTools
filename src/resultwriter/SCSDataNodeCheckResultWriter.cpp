@@ -1,5 +1,7 @@
 #include <fstream>
 #include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "DBLog.h"
 #include "SCSDataNodeCheckResultWriter.h"
 #include "SCSReport.h"
@@ -25,7 +27,7 @@ bool CSCSDataNodeCheckResultWriter::Write(boost::shared_ptr<const CSCSReport> re
     std::string filePath = "./report/";
     if (!opendir(filePath.c_str()))
     {
-        mkdir(filePath.c_str());
+        mkdir(filePath.c_str(),S_IRWXU);
     }
     filePath += filename;
     std::fstream fs(filePath.c_str(), std::ios::out | std::ios::app);

@@ -1,7 +1,3 @@
-//
-// Created by Administrator on 2015/12/31.
-//
-
 #ifndef _RESULTWRITER_SCSDATANODEREPORT_H_
 #define _RESULTWRITER_SCSDATANODEREPORT_H_
 
@@ -22,6 +18,7 @@ struct STNode
     std::string IP;
     std::string Port;
     std::string TableName;
+    //节点数量
     std::string Count;
 };
 

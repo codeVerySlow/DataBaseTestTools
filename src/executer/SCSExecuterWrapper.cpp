@@ -27,27 +27,31 @@ CSCSExecuterWrapper::CSCSExecuterWrapper():srcExcuter(),desExcuter(),checker(new
 
 CSCSExecuterWrapper::~CSCSExecuterWrapper()
 {
-
+    srcExcuter->CloseDataSource();
+    desExcuter->CloseDataSource();
 }
 
 bool CSCSExecuterWrapper::ExecuteSQL(const CSCSPreparedSQLSet &set,const STSQLPair &stsqlPair, boost::shared_ptr<CSCSResultIter> &srcIter,
                                      boost::shared_ptr<CSCSResultIter> &desIter,
                                      std::vector<boost::shared_ptr<const CSCSReport> > &reports, std::string &msg)
 {
+    msg="";
     if (!checker->BeforeEachSql(set,reports))
     {
+        msg="before each sql check false";
         return false;
     }
-    if (!(srcIter = srcExcuter->ExecuteSQL(stsqlPair.strSQLSource, msg)))
+    if (!(srcIter = srcExcuter->ExecuteSQL(CSCSConfigHelper::GetInstance()->GetConfig()->emModel==Model_SCSDB_MYSQL?stsqlPair.strSQLSource:stsqlPair.strSQLDestination, msg)))
     {
         return false;
     }
-    if (!(desIter = desExcuter->ExecuteSQL(stsqlPair.strSQLDestination, msg)))
+    if (!(desIter = desExcuter->ExecuteSQL( stsqlPair.strSQLDestination, msg)))
     {
         return false;
     }
     if (!checker->AfterEachSql(set,reports))
     {
+        msg="after each sql check false";
         return false;
     }
     return true;

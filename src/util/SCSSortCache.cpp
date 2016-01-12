@@ -14,6 +14,7 @@ CSCSSortCache::CSCSSortCache(const std::string &cacheName)
           m_setMemoryCache(),
           m_iterCurrent(m_setMemoryCache.begin()),
           m_fileCache((m_cacheName + "_cache").c_str(), std::ios::in | std::ios::out | std::ios::trunc),
+          m_fileData((m_cacheName + "_data").c_str(), std::ios::in | std::ios::out | std::ios::trunc),
           isReadModel(false),
           total(0)
 {
@@ -26,6 +27,7 @@ CSCSSortCache::CSCSSortCache(const std::string &cacheName)
 CSCSSortCache::~CSCSSortCache()
 {
     m_fileCache.close();
+    m_fileData.close();
 }
 
 bool CSCSSortCache::Append(const unsigned int &key)
@@ -47,9 +49,27 @@ bool CSCSSortCache::Append(const unsigned int &key)
     return true;
 }
 
+bool CSCSSortCache::Append(const std::vector<std::string> &key)
+{
+    std::vector<std::string>::const_iterator iterator = key.begin();
+    std::string combinStr;
+
+    while (iterator != key.end())
+    {
+        combinStr += *iterator++;
+        combinStr += " ";
+    }
+    m_fileData << combinStr << std::endl;
+    unsigned int crc = crc32c::Value(combinStr.c_str(), combinStr.size());
+
+    return Append(crc);
+}
+
+
 bool CSCSSortCache::Short()
 {
     m_fileCache.close();
+    m_fileData.close();
     if (total <= MEMORY_SET_MAX)
     {
         return true;
@@ -85,7 +105,43 @@ bool CSCSSortCache::Read(unsigned int *key)
     return false;
 }
 
-void CSCSSortCache::Delete()
+std::string CSCSSortCache::GetRealData(const unsigned int &key)
 {
-    m_setMemoryCache.clear();
+    std::fstream cache((m_cacheName + "_cache").c_str(), std::ios::in);
+    if (!cache)
+    {
+        LOG_ERROR("SCSSortCache GetRealData open cache file err");
+        return "";
+    }
+
+    unsigned int crc = 0;
+    int pos = 0;
+    while (cache >> crc)
+    {
+        if (key == crc)
+        {
+            break;
+        }
+        pos++;
+    }
+    if (pos == 0)
+    {
+        return "";
+    }
+
+    std::fstream data((m_cacheName + "_data").c_str(), std::ios::in);
+    if (!data)
+    {
+        LOG_ERROR("SCSSortCache GetRealData open cache data file err");
+        return "";
+    }
+
+    std::string result;
+    while (pos-- >= 0 && getline(data, result)) ;
+
+    cache.close();
+    data.close();
+    return result;
 }
+
+

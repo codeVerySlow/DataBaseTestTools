@@ -31,6 +31,7 @@ boost::shared_ptr<CSCSResultIter> CSCSSCSExecuter::ExecuteSQL(const std::string 
 
 void CSCSSCSExecuter::CloseDataSource()
 {
+    m_isClose=true;
     scs->CloseSCS();
 }
 

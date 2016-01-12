@@ -16,7 +16,9 @@ public:
     CSCSMySqlReader();
 
     ~CSCSMySqlReader();
-
+    //功能：读取下一条测试用例
+    //返回值：true 读取正常并且有未读完数据 false 读取异常或者读取完成
+    //参数：set 用例集合
     bool ReadNextTestCase(CSCSPreparedSQLSet &set);
 
 private:

@@ -5,8 +5,24 @@
 #include <string>
 #include <time.h>
 
+//对比结果报告类
 class CSCSReport
 {
+private:
+    //是否成功
+    bool m_isSuccess;
+    //提示信息
+    std::string m_strMessage;
+    //源版本
+    std::string m_strSrcVersion;
+    //目标版本
+    std::string m_strDesVersion;
+    //当前执行的sql
+    std::string m_strCurrentSql;
+    //开始时间
+    time_t m_StartTime;
+    //结束时间
+    time_t m_EndTime;
 public:
     bool isM_isSuccess() const
     {
@@ -90,14 +106,7 @@ public:
     virtual  ~CSCSReport()
     { };
 
-private:
-    bool m_isSuccess;
-    std::string m_strMessage;
-    std::string m_strSrcVersion;
-    std::string m_strDesVersion;
-    std::string m_strCurrentSql;
-    time_t m_StartTime;
-    time_t m_EndTime;
+
 };
 
 

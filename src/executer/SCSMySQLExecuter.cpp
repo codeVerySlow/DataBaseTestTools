@@ -32,6 +32,7 @@ boost::shared_ptr<CSCSResultIter> CSCSMySQLExecuter::ExecuteSQL(const std::strin
 
 void CSCSMySQLExecuter::CloseDataSource()
 {
+    m_isClose=true;
     mysql->CloseMySql();
 }
 

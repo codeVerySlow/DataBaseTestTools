@@ -1,4 +1,7 @@
+#include <fstream>
 #include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "util/SCSUtilTools.h"
 #include "executer/SCSSlaveCheckReport.h"
 #include "SCSSlaveCheckResultWriter.h"
@@ -22,7 +25,7 @@ bool CSCSSlaveCheckResultWriter::Write(boost::shared_ptr<const CSCSReport> repor
     std::string filePath = "./report/";
     if (!opendir(filePath.c_str()))
     {
-        mkdir(filePath.c_str());
+        mkdir(filePath.c_str(),S_IRWXU);
     }
     filePath += filename;
     std::fstream fs(filePath.c_str(), std::ios::out | std::ios::app);

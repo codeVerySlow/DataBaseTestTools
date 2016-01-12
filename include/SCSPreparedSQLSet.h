@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-
+//源SQL与对比SQL
 struct STSQLPair
 {
     std::string strSQLSource;
@@ -50,9 +50,13 @@ public:
     bool m_checkDataNodes;
     bool m_Init;
     int m_nCaseID;
-
+    //功能：迭代获取测试用例中下一条SQL语句
+    //返回值：bool 读取成功并且还有下一条记录 true 读取完成或者读取失败 false
+    //参数：pair 读取到的SQL语句
     bool GetNext(STSQLPair &pair) const;
-
+    //功能：读取当前正在使用的SQL语句
+    //返回值：STSQLPair 正在使用的SQL语句
+    //参数：void
     STSQLPair GetCurrent() const;
 
 private:

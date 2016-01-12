@@ -7,6 +7,7 @@
 #include "util/SCSSortCache.h"
 #include "util/SCSCrc32c.h"
 #include "SCSComparerReport.h"
+#include "util/SCSUtilTools.h"
 
 CSCSFileComparer::CSCSFileComparer() : m_testcasereport(new STTestCaseReport)
 {
@@ -42,6 +43,8 @@ bool CSCSFileComparer::Compare(boost::shared_ptr<CSCSResultIter> iter1, boost::s
         if (crc1 != crc2)
         {
             m_testcasereport->m_emDisMatchType=DISMATCHTYPE_ROW;
+            m_testcasereport->srcRow.push_back(cache1.GetRealData(crc1));
+            m_testcasereport->desRow.push_back(cache2.GetRealData(crc2));
             return false;
         }
     }
@@ -115,18 +118,6 @@ void CSCSFileComparer::WriteCRCToCache(boost::shared_ptr<CSCSResultIter> iter, C
     std::vector<std::string> iterData;
     while (iter->GetNext(iterData))
     {
-
-        std::vector<std::string>::iterator iterator = iterData.begin();
-        std::string combinStr;
-
-        while (iterator != iterData.end())
-        {
-            combinStr += *iterator++;
-            combinStr += " ";
-        }
-
-        unsigned int crc = crc32c::Value(combinStr.c_str(), combinStr.size());
-
-        cache << crc;
+        cache << iterData;
     }
 }

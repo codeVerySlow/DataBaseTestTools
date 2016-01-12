@@ -1,5 +1,7 @@
+#include <fstream>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include "DBLog.h"
 #include "SCSTestResultWriter.h"
 #include "util/SCSUtilTools.h"
@@ -24,10 +26,9 @@ bool CSCSTestResultWriter::Write(boost::shared_ptr<const CSCSReport> report)
 
     if (!opendir(filePath.c_str()))
     {
-        mkdir(filePath.c_str());
+        mkdir(filePath.c_str(),S_IRWXU);
     }
-    filePath += filename;
-    std::fstream fs(filePath.c_str(), std::ios::out | std::ios::app);
+    std::fstream fs((filePath+filename).c_str(), std::ios::out | std::ios::app);
     if (!fs)
     {
         LOG_ERROR(("DataNodeCheckResultWriter err:open file err " + filePath).c_str());
@@ -73,6 +74,7 @@ bool CSCSTestResultWriter::Write(boost::shared_ptr<const CSCSReport> report)
         fs << "==========================================================================" << std::endl;
         iter++;
     }
+    fs.close();
     return true;
 }
 

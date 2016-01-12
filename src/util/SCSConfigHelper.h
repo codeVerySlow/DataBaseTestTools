@@ -58,9 +58,13 @@ public:
     }
 
     ~CSCSConfigHelper();
-
+    //功能：初始化并读取配置文件
+    //返回值：true 读取正常 false 读取异常
+    //参数：void
     bool Read();
-
+    //功能：获取配置
+    //返回值：指向报告的指针
+    //参数：void
     const STConfig *GetConfig()
     {
         return Config();
