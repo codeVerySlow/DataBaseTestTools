@@ -90,10 +90,22 @@ bool CSCSSCSHelper::GetNextRow(std::vector<std::string> *dataRow)
 
 void CSCSSCSHelper::CloseSCS()
 {
+    if(!m_isReadFinish)
+    {
+        scsdb_release(m_scsdb);
+    }
     scsdb_close(m_scsdb);
+    m_isClose=true;
 }
 
 bool CSCSSCSHelper::IsConnect()
 {
     return m_scsdb != NULL;
+}
+
+std::string CSCSSCSHelper::GetServerVersion()
+{
+    if(!IsConnect())
+        return "";
+    return scsdb_get_ver(m_scsdb);
 }

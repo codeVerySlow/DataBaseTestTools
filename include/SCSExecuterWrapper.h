@@ -32,15 +32,16 @@ public:
     bool AfterTestCaseCheck(const CSCSPreparedSQLSet &set,std::vector<boost::shared_ptr<const CSCSReport> > &reports);
     //功能：执行单条SQL
     //返回值：bool 执行正常 true 执行错误 false
-    //参数：set 读取的用例集 stsqlPair 要执行的sql语句 srcIter执行成功后返回结果迭代器 desIter执行成功后返回结果迭代器 reports测试用例报告集合 msg错误信息
+    //参数：set 读取的用例集 stsqlPair 要执行的sql语句 srcIter执行成功后返回结果迭代器 desIter执行成功后返回结果迭代器 reports测试用例报告集合 msg错误信息 isStop是否严重错误需要停止
     bool ExecuteSQL(const CSCSPreparedSQLSet &set,const STSQLPair &stsqlPair, boost::shared_ptr<CSCSResultIter> &srcIter,
                     boost::shared_ptr<CSCSResultIter> &desIter,
-                    std::vector<boost::shared_ptr<const CSCSReport> > &reports, std::string &msg);
+                    std::vector<boost::shared_ptr<const CSCSReport> > &reports, std::string &msg,bool &isStop);
+    void SetReportVersion(boost::shared_ptr<CSCSReport>  report);
 
 private:
-    boost::shared_ptr<CSCSExecuter> srcExcuter;
-    boost::shared_ptr<CSCSExecuter> desExcuter;
-    boost::shared_ptr<CSCSExecuterChecker> checker;
+    boost::shared_ptr<CSCSExecuter> m_srcExcuter;
+    boost::shared_ptr<CSCSExecuter> m_desExcuter;
+    boost::shared_ptr<CSCSExecuterChecker> m_checker;
 };
 
 #endif

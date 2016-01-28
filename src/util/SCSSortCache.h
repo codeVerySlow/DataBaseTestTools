@@ -46,6 +46,18 @@ private:
     std::fstream m_fileCache;
     std::fstream m_fileData;
     bool isReadModel;
+public:
+    unsigned int getTotal() const
+    {
+        return total;
+    }
+
+    void setTotal(unsigned int total)
+    {
+        CSCSSortCache::total = total;
+    }
+
+private:
     unsigned int total;
 };
 

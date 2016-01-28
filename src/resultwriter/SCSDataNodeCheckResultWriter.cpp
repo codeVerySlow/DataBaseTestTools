@@ -1,7 +1,5 @@
 #include <fstream>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <string.h>
 #include "DBLog.h"
 #include "SCSDataNodeCheckResultWriter.h"
 #include "SCSReport.h"
@@ -18,19 +16,7 @@ bool CSCSDataNodeCheckResultWriter::Write(boost::shared_ptr<const CSCSReport> re
         return false;
     }
 
-    char filename[80];
-    time_t rawtime = dataNodeReport->getM_StartTime();
-    struct tm *timeinfo = localtime(&rawtime);
-
-    strftime(filename, 80, "DataNodesQuantity_%Y%m%d.report", timeinfo);
-
-    std::string filePath = "./report/";
-    if (!opendir(filePath.c_str()))
-    {
-        mkdir(filePath.c_str(),S_IRWXU);
-    }
-    filePath += filename;
-    std::fstream fs(filePath.c_str(), std::ios::out | std::ios::app);
+    std::fstream fs((filePath+"DataNodesQuantity.report").c_str(), std::ios::out | std::ios::app);
     if (!fs)
     {
         LOG_ERROR(("DataNodeCheckResultWriter err:open file err " + filePath).c_str());
@@ -41,23 +27,29 @@ bool CSCSDataNodeCheckResultWriter::Write(boost::shared_ptr<const CSCSReport> re
         fs << "DataNodesQuantity报告" << std::endl;
         fs << "==========================================================================" << std::endl;
         fs << "开始时间:	" << SCSUtilTools::timeToString(dataNodeReport->getM_StartTime()) << std::endl;
-        fs << "结束时间:	" << SCSUtilTools::timeToString(dataNodeReport->getM_StartTime()) << std::endl;
+        fs << "结束时间:	" << SCSUtilTools::timeToString(dataNodeReport->getM_EndTime()) << std::endl;
         fs << "运行时长:	" <<
         SCSUtilTools::spanTimeToString(dataNodeReport->getM_EndTime(), dataNodeReport->getM_StartTime()) << std::endl;
         fs << "当前SCSDB版本:	" << dataNodeReport->getM_strDesVersion() << std::endl;
         fs << "==========================================================================" << std::endl;
     }
-    fs << dataNodeReport->getM_strCurrentSql() << std::endl;
-    fs << "IP                     tablename		count" << std::endl;
+    fs <<"["<<dataNodeReport->getM_strCurrentModel()<<"]"<<"["<<dataNodeReport->getM_strCurrentCaseID()<<"]"<< dataNodeReport->getM_strCurrentSql() << std::endl;
+    fs << "IP                                         tablename		                        count" << std::endl;
     std::vector<STNode>::const_iterator nodeIter = dataNodeReport->getNodeCount().begin();
+    char tablenamebuff[20];
+    char nodecount[20];
+    memset(tablenamebuff,0,20);
+    memset(nodecount,0,20);
     while (nodeIter != dataNodeReport->getNodeCount().end())
     {
-        fs << (*nodeIter).IP << ":" << (*nodeIter).Port << "		" << (*nodeIter).TableName << "			" <<
-        (*nodeIter).Count << std::endl;
+        //格式化右对齐
+        sprintf(tablenamebuff,"%20s",(*nodeIter).TableName.c_str());
+        sprintf(nodecount,"%20s",(*nodeIter).Count.c_str());
+        fs << (*nodeIter).IP << ":" << (*nodeIter).Port << "		" << tablenamebuff << "			" <<
+        nodecount << std::endl;
         nodeIter++;
     }
     fs << "==========================================================================" << std::endl;
     fs.close();
     return true;
 }
-

@@ -1,6 +1,9 @@
 #ifndef _COMPARER_SCSFILECOMPARER_H_
 #define _COMPARER_SCSFILECOMPARER_H_
 
+#include <vector>
+#include <boost/shared_ptr.hpp>
+#include <string>
 #include "SCSComparer.h"
 
 class CSCSReport;
@@ -25,7 +28,7 @@ public:
     boost::shared_ptr<STTestCaseReport> GetReport() const;
 
 private:
-    void WriteCRCToCache(boost::shared_ptr<CSCSResultIter> iter, CSCSSortCache &fileName);
+    void WriteCRCToCache(boost::shared_ptr<CSCSResultIter> iter, CSCSSortCache &fileName,std::vector<std::string> &column);
 
     boost::shared_ptr<STTestCaseReport> m_testcasereport;
 };

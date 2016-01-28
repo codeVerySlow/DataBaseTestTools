@@ -16,4 +16,4 @@ public:
 };
 
 
-#endif //PROGRAM_SCSDATANODECHECKRESULTWRITER_H
+#endif 

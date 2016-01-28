@@ -1,3 +1,5 @@
+#ifndef _UTIL_SCSUTILTOOLS_H_
+#define _UTIL_SCSUTILTOOLS_H_
 #include <string>
 #include <vector>
 #include <sstream>
@@ -35,4 +37,11 @@ namespace SCSUtilTools
     extern std::string timeToString(const time_t &time);
     //时间间隔转换string
     extern std::string spanTimeToString(const time_t &end, const time_t &begin);
+
+    extern std::string timeToFileNameString(const time_t &time);
+
+    extern void initLog();
+
+    extern void createDirIfNotExist(const std::string &path);
 }
+#endif

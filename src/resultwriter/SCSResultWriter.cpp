@@ -31,3 +31,4 @@ boost::shared_ptr<CSCSResultWriter> CSCSResultWriter::Create(EMWriterType type)
     }
     return boost::shared_ptr<CSCSResultWriter>();
 }
+

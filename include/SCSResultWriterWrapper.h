@@ -16,9 +16,7 @@ public:
     //功能：将测试结果、监控结果等以报告的形式输出到磁盘
     //返回值：bool 写入成功 true 写入失败 false
     //参数：reports 报告结果集合
-    bool Write(std::vector<boost::shared_ptr<const CSCSReport> > &reports);
-
-private:
+	bool Write(std::vector<boost::shared_ptr<const CSCSReport> > &reports);private:
     boost::shared_ptr<CSCSResultWriter> m_dataNodeWriter;
     boost::shared_ptr<CSCSResultWriter> m_slaveCheckWriter;
     boost::shared_ptr<CSCSResultWriter> m_testResultWriter;

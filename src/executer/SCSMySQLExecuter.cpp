@@ -42,3 +42,12 @@ bool CSCSMySQLExecuter::GetNext(std::vector<std::string> &dataRow)
 }
 
 
+std::string CSCSMySQLExecuter::GetServerVersion()
+{
+    std::string msg;
+    if(!mysql->IsConnect())
+    {
+        ExecuteSQL("select 1",msg);
+    }
+    return mysql->GetServerVersion();
+}

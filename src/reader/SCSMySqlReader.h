@@ -21,8 +21,15 @@ public:
     //参数：set 用例集合
     bool ReadNextTestCase(CSCSPreparedSQLSet &set);
 
+
+    virtual int GetTestCaseTotal();
+
+    virtual int GetTestCaseIndex();
+
 private:
     int nTestCaseId;
+    int nTestCaseTotal;
+    int nTestCaseIndex;
     boost::shared_ptr<CSCSMySqlHelper> mysql;
     bool GetTestCase(const std::string &column,
                      const std::vector<std::vector<std::string> > &vecTestTable,

@@ -7,7 +7,7 @@
 #include "SCSExternSort.h"
 #include "DBLog.h"
 
-const unsigned int CSCSSortCache::MEMORY_SET_MAX = 40;
+const unsigned int CSCSSortCache::MEMORY_SET_MAX = 1024*1024*256;
 
 CSCSSortCache::CSCSSortCache(const std::string &cacheName)
         : m_cacheName(cacheName),
@@ -123,10 +123,6 @@ std::string CSCSSortCache::GetRealData(const unsigned int &key)
             break;
         }
         pos++;
-    }
-    if (pos == 0)
-    {
-        return "";
     }
 
     std::fstream data((m_cacheName + "_data").c_str(), std::ios::in);

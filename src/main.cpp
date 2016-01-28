@@ -15,16 +15,18 @@ void run();
 
 int main(int argc, char const *argv[])
 {
-    LOG_INIT_NORMAL("./", true);
-    SET_LOGLEVEL(__SLL_DEBUG);
-    assert(CSCSConfigHelper::GetInstance()->Read());
+    SCSUtilTools::initLog();
+    if (!(argc > 1 ? CSCSConfigHelper::GetInstance()->Read(argv[1]) : CSCSConfigHelper::GetInstance()->Read()))
+    {
+        std::cout << "read config file err see log file" << std::endl;
+        return 0;
+    }
 
     int cycle = CSCSConfigHelper::GetInstance()->GetConfig()->nCycle;
-    while (cycle--)
+    while (cycle-- > 0)
     {
         run();
     }
-
     return 0;
 }
 
@@ -39,33 +41,24 @@ void run()
     std::vector<boost::shared_ptr<const CSCSReport> > reports;
     std::string msg;
     boost::shared_ptr<CSCSComparerReport> report(new CSCSComparerReport());
+    char progress[100];
     while (reader.ReadNextTestCase(set))
     {
-        std::cout << "==================>compare testcase id:" << set.m_nCaseID <<" <=================="<< std::endl;
-        if(!executer.BeforeTestCaseCheck(set,reports))
-        {
-            std::cout<<"XXXXXXXXXXXXXXXX Before TestCaseCheck Erro XXXXXXXXXXXXXXXXXX"<<std::endl;
-            continue;
-        }
         STSQLPair pair;
-        boost::shared_ptr<CSCSResultIter> srcIter;
-        boost::shared_ptr<CSCSResultIter> desIter;
+        boost::shared_ptr<CSCSResultIter> srcIter,desIter;
         bool ismatch = false;
+        bool isstop=false;
         while (set.GetNext(pair))
         {
-            std::cout << "*****************>compare sql :" << set.m_nCurrentIndex << "/" << set.m_nTotal <<" <*****************" <<std::endl;
-            std::cout << "execute SCS sql :" << pair.strSQLDestination << std::endl;
-            std::cout << "execute MySql sql :" << pair.strSQLSource << std::endl;
-            if (!executer.ExecuteSQL(set,pair, srcIter, desIter,reports, msg))
+            if (!executer.ExecuteSQL(set, pair, srcIter, desIter, reports, msg,isstop))
             {
-                std::cout << msg << std::endl;
-                report->AddTestCaseExecuteErrReport(set,msg);
+                report->AddTestCaseExecuteErrReport(set, msg);
                 report->CountFail(set.m_strModule);
+                ismatch=false;
                 break;
             }
 
-            ismatch = set.m_checkSequence ? comparer.CompareSequence(srcIter, desIter) : comparer.Compare(srcIter,
-                                                                                                          desIter);
+            ismatch = set.m_checkSequence ? comparer.CompareSequence(srcIter, desIter) : comparer.Compare(srcIter,desIter);
             if (!ismatch)
             {
                 report->AddTestCaseFailReport(comparer.GetReport(), set);
@@ -77,12 +70,16 @@ void run()
         {
             report->CountSuccess(set.m_strModule);
         }
-        if(!executer.AfterTestCaseCheck(set,reports))
+        executer.AfterTestCaseCheck(set, reports);
+        sprintf(progress, "用例执行进度 %d/%d，对比结果一致用例数：%d，对比结果不一致用例数：%d", reader.GetTestCaseIndex(),
+                reader.GetTestCaseTotal(), report->GetSuccessTotal(), report->GetFailTotal());
+        LOG_INFO(progress);
+        if(isstop)
         {
-            std::cout<<"XXXXXXXXXXXXXXXX After TestCase Check Erro XXXXXXXXXXXXXXXX"<<std::endl;
-            continue;
+            break;
         }
     }
+    executer.SetReportVersion(report);
     report->setM_EndTime(time(NULL));
     reports.push_back(report);
     writer.Write(reports);

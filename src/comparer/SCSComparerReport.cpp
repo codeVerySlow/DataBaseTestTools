@@ -44,3 +44,19 @@ int CSCSComparerReport::GetFail(const std::string &module) const
 {
     return m_fail[module];
 }
+
+int CSCSComparerReport::GetSuccessTotal() const
+{
+    int count=0;
+    for (std::map<std::string,int>::iterator it=m_success.begin(); it!=m_success.end(); ++it)
+        count+=it->second;
+    return count;
+}
+
+int CSCSComparerReport::GetFailTotal() const
+{
+    int count=0;
+    for (std::map<std::string,int>::iterator it=m_fail.begin(); it!=m_fail.end(); ++it)
+        count+=it->second;
+    return count;
+}

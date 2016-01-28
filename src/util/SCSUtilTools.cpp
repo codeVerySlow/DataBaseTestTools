@@ -5,6 +5,8 @@
 #include <dirent.h>
 #include <fstream>
 #include <time.h>
+#include <DBLog.h>
+#include <sys/stat.h>
 #include "SCSUtilTools.h"
 
 namespace SCSUtilTools
@@ -47,6 +49,10 @@ namespace SCSUtilTools
     std::vector<std::string> split(const std::string &s, const std::string &delim)
     {
         std::vector<std::string> elems;
+        if(s.empty()||delim.empty())
+        {
+            return elems;
+        }
         split(s, delim, elems);
         return elems;
     }
@@ -173,5 +179,39 @@ namespace SCSUtilTools
         spanTime += NumberToString(second);
 
         return spanTime;
+    }
+
+    std::string timeToFileNameString(const time_t &time)
+    {
+        char filename[80];
+        struct tm *timeinfo = localtime(&time);
+
+        strftime(filename, 80, "%Y%m%d", timeinfo);
+
+        return filename;
+    }
+
+    void initLog()
+    {
+        createDirIfNotExist("./log/");
+        LOG_INIT_NORMAL3("./log/", true, 0, 0, "RoboTester_" + SCSUtilTools::timeToFileNameString(time(NULL)) + ".log");
+#ifdef _DEBUG_
+        SET_LOGLEVEL(__SLL_DEBUG);
+#else
+        SET_LOGLEVEL(__SLL_INFO);
+#endif
+    }
+
+    void createDirIfNotExist(const std::string &path)
+    {
+        DIR *dp=NULL;
+        if ((dp=opendir(path.c_str()))==NULL)
+        {
+            mkdir(path.c_str(),S_IRWXU);
+        }
+        else
+        {
+            closedir( dp );
+        }
     }
 }

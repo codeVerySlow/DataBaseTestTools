@@ -26,6 +26,9 @@ public:
     //返回值：执行结果迭代器 错误时返回空指针
     //参数：sql语句 msg错误信息
     boost::shared_ptr<CSCSResultIter> ExecuteSQL(const std::string &sql, std::string &msg);
+
+    std::string GetServerVersion() ;
+
     //功能：关闭数据源
     //返回值：void
     //参数：void

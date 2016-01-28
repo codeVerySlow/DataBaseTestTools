@@ -22,6 +22,8 @@ struct STTestCaseReport
     std::string strModel;
     std::string strDesCaseSql;
     std::string strSrcCaseSql;
+    std::vector<std::string> desColumn;
+    std::vector<std::string> srcColumn;
     std::vector<std::string> desRow;
     std::vector<std::string> srcRow;
     EMDisMatchType m_emDisMatchType;
@@ -31,10 +33,9 @@ struct STTestCaseReport
 
 class CSCSComparerReport : public CSCSReport
 {
-private:
+public:
     mutable std::map<std::string,int> m_success;
     mutable std::map<std::string,int> m_fail;
-public:
     std::vector<STTestCaseReport> m_vecFailTestCase;
 
     //功能：添加对比失败用例报告
@@ -61,6 +62,14 @@ public:
     //返回值：失败个数
     //参数：model 用例模块
     int GetFail(const std::string &module) const;
+    //功能：获取用例成功总个数
+    //返回值：成功总个数
+    //参数：void
+    int GetSuccessTotal() const ;
+    //功能：获取用例失败总个数
+    //返回值：失败总个数
+    //参数：void
+    int GetFailTotal() const ;
 };
 
 

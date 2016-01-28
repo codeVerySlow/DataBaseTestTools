@@ -16,7 +16,7 @@ boost::shared_ptr<CSCSResultIter> CSCSSCSExecuter::ExecuteSQL(const std::string 
                           "UTF8",
                           msg))
         {
-            LOG_ERROR(("Executer open mysql m_pConnect err" + msg).c_str());
+            LOG_ERROR(("Executer open scsdb m_pConnect err" + msg).c_str());
             return boost::shared_ptr<CSCSResultIter>();
         }
     }
@@ -41,3 +41,12 @@ bool CSCSSCSExecuter::GetNext(std::vector<std::string> &dataRow)
 }
 
 
+std::string CSCSSCSExecuter::GetServerVersion()
+{
+    std::string msg;
+    if(!scs->IsConnect())
+    {
+        ExecuteSQL("select 1",msg);
+    }
+    return scs->GetServerVersion();
+}

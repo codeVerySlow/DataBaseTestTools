@@ -97,7 +97,7 @@ int CSCSExternSort::memory_sort()
         qsort(array, n, sizeof(unsigned int), cmp_int);
         char *fileName = temp_filename(file_count++);
         FILE *tempFile = fopen(fileName, "w");
-        free(fileName);
+        delete[] fileName;
         write_data(tempFile, array, n);
         fclose(tempFile);
     }
@@ -150,7 +150,7 @@ void CSCSExternSort::K_Merge()
     {
         char *fileName = temp_filename(i);
         farray[i] = fopen(fileName, "rt");
-        free(fileName);
+        delete[] fileName;
     }
 
     for (i = 0; i < k; ++i)  //初始读取

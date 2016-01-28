@@ -13,6 +13,7 @@ bool CSCSExecuterChecker::BeforeTestCase(const CSCSPreparedSQLSet &set,std::vect
 
 bool CSCSExecuterChecker::AfterTestCase(const CSCSPreparedSQLSet &set,std::vector<boost::shared_ptr<const CSCSReport> > &reports)
 {
+    //用例结束后执行的检查
     if(!set.m_checkDataNodes)
     {
         return true;
@@ -23,6 +24,7 @@ bool CSCSExecuterChecker::AfterTestCase(const CSCSPreparedSQLSet &set,std::vecto
 
 bool CSCSExecuterChecker::BeforeEachSql(const CSCSPreparedSQLSet &set,std::vector<boost::shared_ptr<const CSCSReport> > &reports)
 {
+    //每条sql开始前执行的检查
     if(!CSCSConfigHelper::GetInstance()->GetConfig()->checkSlavestatus)
     {
         return true;

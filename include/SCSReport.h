@@ -19,11 +19,36 @@ private:
     std::string m_strDesVersion;
     //当前执行的sql
     std::string m_strCurrentSql;
+    //当前执行的用例id
+    int m_strCurrentCaseID;
+    //当前用例所属模块
+    std::string m_strCurrentModel;
     //开始时间
     time_t m_StartTime;
     //结束时间
     time_t m_EndTime;
 public:
+
+    int getM_strCurrentCaseID() const
+    {
+        return m_strCurrentCaseID;
+    }
+
+    void setM_strCurrentCaseID(int m_strCurrentCaseID)
+    {
+        CSCSReport::m_strCurrentCaseID = m_strCurrentCaseID;
+    }
+
+    const std::string &getM_strCurrentModel() const
+    {
+        return m_strCurrentModel;
+    }
+
+    void setM_strCurrentModel(const std::string &m_strCurrentModel)
+    {
+        CSCSReport::m_strCurrentModel = m_strCurrentModel;
+    }
+
     bool isM_isSuccess() const
     {
         return m_isSuccess;
@@ -101,7 +126,8 @@ public:
     { };
 
     CSCSReport() : m_isSuccess(false), m_strMessage(), m_strSrcVersion(), m_strDesVersion(),m_strCurrentSql(), m_StartTime(time(NULL)),m_EndTime(time(NULL))
-    { };
+    {
+    };
 
     virtual  ~CSCSReport()
     { };

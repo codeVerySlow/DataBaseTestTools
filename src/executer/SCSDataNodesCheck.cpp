@@ -24,6 +24,7 @@ bool CSCSDataNodesCheck::Check(const CSCSPreparedSQLSet &set, std::vector<boost:
             return Error("SlaverCheck err:connect to SCSDB err:" + msg, reports);
         }
     }
+    //执行查询节点数量命令
     if (!m_pSCSHelper->InitSelect("show table status", msg))
     {
         return Error("DataNodesCheck err:execute check err:" + msg, reports);
@@ -34,7 +35,7 @@ bool CSCSDataNodesCheck::Check(const CSCSPreparedSQLSet &set, std::vector<boost:
     {
         return Error("DataNodesCheck err:can not query data nodes", reports);
     }
-
+    //获取每个表在每个节点上分布的数据量
     boost::shared_ptr<CSCSDataNodeReport> report(new CSCSDataNodeReport());
     std::vector<STNode> nodes;
     int rowsIndex = SCSUtilTools::GetColumnIndex("Rows", rows);
@@ -44,6 +45,10 @@ bool CSCSDataNodesCheck::Check(const CSCSPreparedSQLSet &set, std::vector<boost:
         nodes.push_back(STNode(rows[0], rows[1], rows[tableIndex], rows[rowsIndex]));
     }
     report->setNodeCount(nodes);
+    report->setM_strDesVersion(m_pSCSHelper->GetServerVersion());
+    report->setM_strCurrentSql(set.GetCurrent().strSQLDestination);
+    report->setM_strCurrentCaseID(set.m_nCaseID);
+    report->setM_strCurrentModel(set.m_strModule);
     reports.push_back(report);
     if (GetNextHandle())
     {

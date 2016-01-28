@@ -14,11 +14,11 @@ COMPILE_FLAGS =  -Wall -Wextra -g
 # Additional release-specific flags
 RCOMPILE_FLAGS = -D NDEBUG -D__LINUX__
 # Additional debug-specific flags
-DCOMPILE_FLAGS = -D DEBUG -D__LINUX__
+DCOMPILE_FLAGS = -D _DEBUG_ -D__LINUX__
 # Add additional include paths
 INCLUDES = -I $(SRC_PATH)/include -I $(SRC_PATH)/src -I/home/SCS/include -I/home/SCS/install/mysql/include
 # General linker settings
-LINK_FLAGS = -L/home/SCS/lib -L/home/SCS/install/mysql/lib/mysql  -lmysqlclient -lscsdbclient -lscsdblog -lscsdblibrary -llog4cplus -pthread -lrt
+LINK_FLAGS = /home/SCS/lib/liblog4cplus.a -L/home/SCS/lib -L/home/SCS/install/mysql/lib/mysql  -lmysqlclient -lscsdbclient -lscsdblog -lscsdblibrary -pthread -lrt
 # Additional release-specific linker settings
 RLINK_FLAGS =
 # Additional debug-specific linker settings

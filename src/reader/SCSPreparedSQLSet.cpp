@@ -5,6 +5,7 @@ bool CSCSPreparedSQLSet::GetNext(STSQLPair &pair) const
 {
     if ((std::vector<std::string>::size_type) m_nCurrentIndex == m_vecSQLSource.size())
     {
+        //用例循环
         if (--m_nExecTimes > 0)
         {
             m_nCurrentIndex = 0;
@@ -18,6 +19,7 @@ bool CSCSPreparedSQLSet::GetNext(STSQLPair &pair) const
 
     if ((std::vector<std::string>::size_type) m_nCurrentIndex == m_vecSQLDestination.size())
     {
+        //用例循环
         if (--m_nExecTimes > 0)
         {
             m_nCurrentIndex = 0;

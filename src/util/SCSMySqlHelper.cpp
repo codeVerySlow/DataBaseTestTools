@@ -40,7 +40,12 @@ bool CSCSMySqlHelper::Select(const char *sql, std::vector<std::vector<std::strin
 
 void CSCSMySqlHelper::CloseMySql()
 {
+    if(!m_isReadFinish)
+    {
+        mysql_free_result(m_res);
+    }
     mysql_close(mysql);
+    m_isClose=true;
 }
 
 bool CSCSMySqlHelper::InitSelect(const char *sql, std::string &msg)
@@ -104,7 +109,7 @@ bool CSCSMySqlHelper::GetNextRow(std::vector<std::string> *dataRow)
         return false;
     }
 
-    while ((fd = mysql_fetch_field(m_res)))//��ȡ����
+    while ((fd = mysql_fetch_field(m_res)))
     {
         std::string column(fd->name);
         dataRow->push_back(column);
@@ -118,7 +123,7 @@ bool CSCSMySqlHelper::GetNextRow(std::vector<std::string> *dataRow)
     MYSQL_ROW sql_row;
     int j = mysql_num_fields(m_res);
 
-    if ((sql_row = mysql_fetch_row(m_res)))//��ȡ���������
+    if ((sql_row = mysql_fetch_row(m_res)))
     {
         for (i = 0; i < j; i++)
         {
@@ -139,4 +144,9 @@ bool CSCSMySqlHelper::GetNextRow(std::vector<std::string> *dataRow)
 bool CSCSMySqlHelper::IsConnect()
 {
     return mysql != NULL;
+}
+
+std::string CSCSMySqlHelper::GetServerVersion()
+{
+    return mysql_get_server_info(mysql);
 }

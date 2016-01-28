@@ -37,14 +37,14 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet &set)
 
     string casesql = "select * from caseslist";
     casesql += " where caseid>" + SCSUtilTools::NumberToString(nTestCaseId);
-
+    //按模块取出要执行的用例
     if (modules.end() == find(modules.begin(), modules.end(), "all"))
     {
         casesql += " and  modules in ('";
         casesql += SCSUtilTools::join(modules, "','");
         casesql += "')";
     }
-
+    //每次取出一条
     casesql += " LIMIT 1";
 
     LOG_DEBUG(casesql.c_str());
@@ -59,12 +59,12 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet &set)
     {
         return false;
     }
-
+    //获取用例
     vector<string> vecSrcCase;
     GetTestCase("mysqlcases", testTable, vecSrcCase);
     vector<string> vecDesCase;
     GetTestCase("scsdbcases", testTable, vecDesCase);
-
+    //读取相关测试用例信息
     bool checkSequence = testTable[1][SCSUtilTools::GetColumnIndex("sequence_match", testTable[0])] == "1";
     std::string strModule = testTable[1][SCSUtilTools::GetColumnIndex("modules", testTable[0])];
     int nExecTimes = SCSUtilTools::StringToNumber<int>(
@@ -75,9 +75,19 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet &set)
     std::string strSCSInit=testTable[1][SCSUtilTools::GetColumnIndex("scsdb_init",testTable[0])];
     std::string strMySqlInit=testTable[1][SCSUtilTools::GetColumnIndex("mysql_init",testTable[0])];
 
+    //获取初始化语句
     if(init)
     {
-        std::string sourcePath= SCSUtilTools::split(strMySqlInit," ")[1];
+        vector<string> vecPath= SCSUtilTools::split(strMySqlInit," ");
+        if(vecPath.size()<=1)
+        {
+            return false;
+        }
+        std::string sourcePath=vecPath[1];
+        if(sourcePath.empty())
+        {
+            return false;
+        }
         CSCSGetFileRecord sourceRecord(sourcePath.c_str());
         if(sourceRecord.Init()!=0)
         {
@@ -96,7 +106,22 @@ bool CSCSMySqlReader::ReadNextTestCase(CSCSPreparedSQLSet &set)
     }
 
     set = CSCSPreparedSQLSet(0,vecSrcCase.size(),checkSequence,strModule,nExecTimes,checkDataNodes,init,nTestCaseId,vecSrcCase,vecDesCase);
-
+    //获取用例总数
+    vector<vector<string> > countTestTable;
+    string countSql="select count(*) from caseslist";
+    if (modules.end() == find(modules.begin(), modules.end(), "all"))
+    {
+        countSql += " modules in ('";
+        countSql += SCSUtilTools::join(modules, "','");
+        countSql += "')";
+    }
+    if(!mysql->Select(countSql.c_str(),&countTestTable,msg))
+    {
+        LOG_ERROR("count caseslist err");
+        return false;
+    }
+    nTestCaseTotal=SCSUtilTools::StringToNumber<int>(countTestTable[1][0]);
+    nTestCaseIndex++;
     return true;
 }
 
@@ -113,15 +138,23 @@ bool CSCSMySqlReader::GetTestCase(const std::string &column, const std::vector<s
     return true;
 }
 
-CSCSMySqlReader::CSCSMySqlReader() : nTestCaseId(0),mysql(new CSCSMySqlHelper())
+CSCSMySqlReader::CSCSMySqlReader() : nTestCaseId(0),nTestCaseTotal(0),nTestCaseIndex(0),mysql(new CSCSMySqlHelper())
 {
 
 }
 
 CSCSMySqlReader::~CSCSMySqlReader()
 {
-
+    mysql->CloseMySql();
 }
 
 
+int CSCSMySqlReader::GetTestCaseTotal()
+{
+    return nTestCaseTotal;
+}
 
+int CSCSMySqlReader::GetTestCaseIndex()
+{
+    return nTestCaseIndex;
+}

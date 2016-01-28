@@ -16,19 +16,7 @@ bool CSCSSlaveCheckResultWriter::Write(boost::shared_ptr<const CSCSReport> repor
         return false;
     }
 
-    char filename[80];
-    time_t rawtime = slaveReport->getM_StartTime();
-    struct tm *timeinfo = localtime(&rawtime);
-
-    strftime(filename, 80, "slavestatus_%Y%m%d.report", timeinfo);
-
-    std::string filePath = "./report/";
-    if (!opendir(filePath.c_str()))
-    {
-        mkdir(filePath.c_str(),S_IRWXU);
-    }
-    filePath += filename;
-    std::fstream fs(filePath.c_str(), std::ios::out | std::ios::app);
+    std::fstream fs((filePath+"slavestatus.report").c_str(), std::ios::out | std::ios::app);
     if (!fs)
     {
         LOG_ERROR(("DataNodeCheckResultWriter err:open file err " + filePath).c_str());
@@ -40,7 +28,7 @@ bool CSCSSlaveCheckResultWriter::Write(boost::shared_ptr<const CSCSReport> repor
         fs << "slavestatus报告" << std::endl;
         fs << "==========================================================================" << std::endl;
         fs << "开始时间:	" << SCSUtilTools::timeToString(slaveReport->getM_StartTime()) << std::endl;
-        fs << "结束时间:	" << SCSUtilTools::timeToString(slaveReport->getM_StartTime()) << std::endl;
+        fs << "结束时间:	" << SCSUtilTools::timeToString(slaveReport->getM_EndTime()) << std::endl;
         fs << "运行时长:	" <<
         SCSUtilTools::spanTimeToString(slaveReport->getM_EndTime(), slaveReport->getM_StartTime()) << std::endl;
         fs << "当前SCSDB版本:	" << slaveReport->getM_strDesVersion() << std::endl;
@@ -53,3 +41,4 @@ bool CSCSSlaveCheckResultWriter::Write(boost::shared_ptr<const CSCSReport> repor
 
     return true;
 }
+

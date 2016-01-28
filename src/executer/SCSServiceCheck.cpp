@@ -6,7 +6,7 @@ bool CSCSServiceCheck::Check(const CSCSPreparedSQLSet &set, std::vector<boost::s
 {
     if (s_nLastPID == -1)
     {
-
+        //TODO:等待scsdb的api支持查询进程id时完成该段代码。
     }
     return false;
 }

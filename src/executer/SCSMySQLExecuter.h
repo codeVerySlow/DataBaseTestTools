@@ -15,6 +15,8 @@ public:
                                                   m_isClose(false)
     { };
 
+    std::string GetServerVersion();
+
     ~CSCSMySQLExecuter()
     {
         if(!m_isClose)

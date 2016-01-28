@@ -12,11 +12,15 @@ public:
                       m_res(NULL),
                       m_isSelect(false),
                       m_isReadAffect(true),
-                      m_isReadFinish(true)
+                      m_isReadFinish(true),
+                      m_isClose(false)
     { };
 
     ~CSCSMySqlHelper()
-    { };
+    {
+        if(!m_isClose)
+            CloseMySql();
+    };
 
     bool ConnMySql(const char *host, const int port, const char *user, const char *pwd, const char *db,
                    const char *charset, std::string &msg);
@@ -26,6 +30,8 @@ public:
     bool InitSelect(const char *sql, std::string &msg);
 
     bool GetNextRow(std::vector<std::string> *dataRow);
+
+    std::string GetServerVersion();
 
     void CloseMySql();
 
@@ -37,6 +43,7 @@ private:
     bool m_isSelect;
     bool m_isReadAffect;
     bool m_isReadFinish;
+    bool m_isClose;
     CSCSMySqlHelper(const CSCSMySqlHelper &);
 
     void operator=(const CSCSMySqlHelper &);

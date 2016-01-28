@@ -31,6 +31,7 @@ bool CSCSSlaverCheck::Check(const CSCSPreparedSQLSet &set, std::vector<boost::sh
         return Error("SlaverCheck err:execute check err:" + msg, set, reports);
     }
 
+    //获取节点备份关系信息
     std::vector<std::string> rows;
     if (!m_pSCSHelper->GetNextRow(&rows))
     {
@@ -40,10 +41,12 @@ bool CSCSSlaverCheck::Check(const CSCSPreparedSQLSet &set, std::vector<boost::sh
     int slaveSQLIndex = SCSUtilTools::GetColumnIndex("Slave_SQL_Running", rows);
     while (m_pSCSHelper->GetNextRow(&rows))
     {
+        //节点备份异常
         if (rows[slaveIOIndex] != "Yes" || rows[slaveSQLIndex] != "Yes")
         {
             boost::shared_ptr<CSCSSlaveCheckReport> report(new CSCSSlaveCheckReport(rows[0], rows[1]));
             report->setM_strCurrentSql(set.GetCurrent().strSQLDestination);
+            report->setM_strDesVersion(m_pSCSHelper->GetServerVersion());
             reports.push_back(report);
             return false;
         }
@@ -72,4 +75,9 @@ bool CSCSSlaverCheck::Error(const std::string &msg, const CSCSPreparedSQLSet &se
     report->setM_strCurrentSql(set.GetCurrent().strSQLDestination);
     reports.push_back(report);
     return false;
+}
+
+CSCSSlaverCheck::~CSCSSlaverCheck()
+{
+    m_pSCSHelper->CloseSCS();
 }

@@ -26,7 +26,6 @@ enum EMModel
     Model_SCSDB_MYSQL
 };
 
-
 struct STConnect
 {
     std::string strIP;
@@ -38,7 +37,7 @@ struct STConnect
 
 struct STConfig
 {
-    STConnect conSrcConnect;
+    STConnect conSrcSCSDBConnect;
     STConnect conDesConnect;
     STConnect conSrcMysqlConnect;
     STConnect conCaseMysqlConnect;
@@ -58,10 +57,15 @@ public:
     }
 
     ~CSCSConfigHelper();
-    //功能：初始化并读取配置文件
+    //功能：初始化并读取配置文件 默认读取/etc/scs/下面的配置文件
     //返回值：true 读取正常 false 读取异常
     //参数：void
     bool Read();
+
+    //功能：初始化并读取配置文件
+    //返回值：true 读取正常 false 读取异常
+    //参数：void
+    bool Read(std::string path);
     //功能：获取配置
     //返回值：指向报告的指针
     //参数：void
@@ -88,6 +92,8 @@ private:
     bool AnalyseLine(const std::string &line, std::string *key, std::string *value);
 
     bool IsCategory(const std::string &line, std::string *category);
+
+    bool IsValidate();
 
     template<typename EnumType>
     EnumType ConvertStringToEnum(const char *pStr);
